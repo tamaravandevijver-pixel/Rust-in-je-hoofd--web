@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rust in je hoofd</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef5f1;
+  color: #35564c;
+}
+header {
+  background: #9fc9b7;
+  text-align: center;
+  padding: 35px 20px;
+}
+h1 { margin: 0 0 10px; }
+main {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+}
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 12px #00000012;
+}
+button {
+  background: #609c83;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  width: 100%;
+  font-size: 17px;
+  margin-top: 10px;
+}
+textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 12px;
+  border: 1px solid #aac8bb;
+  border-radius: 10px;
+  font-size: 16px;
+}
+#cirkel {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #a8d6c3;
+  margin: 20px auto;
+  animation: adem 8s infinite ease-in-out;
+}
+@keyframes adem {
+  0%,100% { transform: scale(.7); }
+  50% { transform: scale(1.2); }
+}
+</style>
+</head>
+<body>
+<header>
+<h1>🌿 Rust in je hoofd</h1>
+<p>Een momentje helemaal voor jezelf</p>
+</header>
+<main>
+<section class="card">
+<h2>🌬️ Ademhaling</h2>
+<p>Adem rustig mee met de cirkel.</p>
+<div id="cirkel"></div>
+<p style="text-align:center">
+4 seconden in, 4 seconden uit
+</p>
+</section>
+
+<section class="card">
+<h2>💚 Een rustgedachte</h2>
+<p id="gedachte">
+Je hoeft niet alles vandaag te doen.
+</p>
+<button onclick="nieuweGedachte()">
+Nieuwe rustgedachte
+</button>
+</section>
+
+<section class="card">
+<h2>📖 Mijn dagboek</h2>
+<p>Wat houdt je vandaag bezig?</p>
+<textarea id="dagboek"
+placeholder="Schrijf hier je gedachten..."></textarea>
+<button onclick="bewaar()">
+Bewaar mijn gedachten
+</button>
+<p id="melding"></p>
+</section>
+
+<section class="card">
+<h2>🌙 Slaaphulp</h2>
+<p>
+Laat de dag los. Ontspan je schouders.
+Adem rustig en geef jezelf toestemming
+om uit te rusten.
+</p>
+</section>
+</main>
+<script>
+const gedachten = [
+ "Je mag het rustig aan doen.",
+ "Niet alles hoeft vandaag.",
+ "Een kleine stap is ook vooruitgang.",
+ "Je bent genoeg zoals je bent.",
+ "Rust nemen is ook belangrijk."
+];
+function nieuweGedachte() {
+ const i = Math.floor(Math.random()*gedachten.length);
+ document.getElementById("gedachte").textContent =
+ gedachten[i];
+}
+const veld = document.getElementById("dagboek");
+try {
+ veld.value = localStorage.getItem("dagboek") || "";
+} catch(e) {}
+function bewaar() {
+ try {
+  localStorage.setItem("dagboek", veld.value);
+  document.getElementById("melding").textContent =
+   "Je gedachten zijn bewaard op dit apparaat.";
+ } catch(e) {
+  document.getElementById("melding").textContent =
+   "Bewaren is niet gelukt.";
+ }
+}
+</script>
+</body>
+</html>
