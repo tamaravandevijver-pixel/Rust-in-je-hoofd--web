@@ -3,136 +3,246 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rust in je hoofd</title>
 <style>
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #eef5f1;
-  color: #35564c;
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f5f2e9;
+ color:#34584b;
 }
-header {
-  background: #9fc9b7;
-  text-align: center;
-  padding: 35px 20px;
+header{
+ padding:45px 22px 35px;
+ text-align:center;
+ background:#d8e9dc;
+ border-radius:0 0 35px 35px;
 }
-h1 { margin: 0 0 10px; }
-main {
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
+.logo{font-size:55px}
+h1{font-size:32px;margin:12px 0}
+h2{font-size:24px}
+p{line-height:1.6}
+main{
+ max-width:520px;
+ margin:auto;
+ padding:22px;
 }
-.card {
-  background: white;
-  border-radius: 18px;
-  padding: 22px;
-  margin-bottom: 16px;
-  box-shadow: 0 3px 12px #00000012;
+.card{
+ background:white;
+ border-radius:22px;
+ padding:24px;
+ margin-bottom:18px;
+ box-shadow:0 4px 18px #234a3612;
 }
-button {
-  background: #609c83;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 14px;
-  width: 100%;
-  font-size: 17px;
-  margin-top: 10px;
+button{
+ width:100%;
+ padding:17px;
+ margin:8px 0;
+ border:0;
+ border-radius:15px;
+ background:#79aa91;
+ color:white;
+ font-size:18px;
+ font-weight:bold;
+ cursor:pointer;
 }
-textarea {
-  width: 100%;
-  min-height: 110px;
-  padding: 12px;
-  border: 1px solid #aac8bb;
-  border-radius: 10px;
-  font-size: 16px;
+button:active{background:#4d8169}
+.back{background:#b5c9bd}
+.page{display:none}
+.page.active{display:block}
+textarea{
+ width:100%;
+ min-height:150px;
+ border:1px solid #b5c9bd;
+ border-radius:12px;
+ padding:14px;
+ font-size:16px;
 }
-#cirkel {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: #a8d6c3;
-  margin: 20px auto;
-  animation: adem 8s infinite ease-in-out;
+.circle{
+ width:130px;
+ height:130px;
+ background:#a4d3b7;
+ border-radius:50%;
+ margin:35px auto;
+ animation:adem 8s infinite ease-in-out;
 }
-@keyframes adem {
-  0%,100% { transform: scale(.7); }
-  50% { transform: scale(1.2); }
+@keyframes adem{
+ 0%,100%{transform:scale(.7)}
+ 50%{transform:scale(1.2)}
+}
+footer{
+ text-align:center;
+ padding:25px;
+ color:#739384;
 }
 </style>
 </head>
 <body>
-<header>
-<h1>🌿 Rust in je hoofd</h1>
-<p>Een momentje helemaal voor jezelf</p>
-</header>
-<main>
-<section class="card">
-<h2>🌬️ Ademhaling</h2>
-<p>Adem rustig mee met de cirkel.</p>
-<div id="cirkel"></div>
-<p style="text-align:center">
-4 seconden in, 4 seconden uit
-</p>
-</section>
 
-<section class="card">
-<h2>💚 Een rustgedachte</h2>
+<header>
+<div class="logo">🌿</div>
+<h1>Rust in je hoofd</h1>
+<p>Een moment van rust, speciaal voor jou</p>
+</header>
+
+<main>
+<div id="home" class="page active">
+<div class="card">
+<h2>Welkom 💚</h2>
+<p>
+Je hoeft even helemaal niets.
+Kies wat jij op dit moment nodig hebt.
+</p>
+<button onclick="openPage('adem')">
+🌬️ Ademhaling
+</button>
+<button onclick="openPage('ontspan')">
+🧘 Ontspanning
+</button>
+<button onclick="openPage('slaap')">
+🌙 Slaaphulp
+</button>
+<button onclick="openPage('dagboek')">
+📖 Mijn dagboek
+</button>
+<button onclick="openPage('gedachten')">
+💚 Rustgedachten
+</button>
+</div>
+</div>
+
+<div id="adem" class="page">
+<div class="card">
+<h2>🌬️ Ademhaling</h2>
+<p>Volg rustig de beweging van de cirkel.</p>
+<div class="circle"></div>
+<p style="text-align:center">
+4 seconden inademen<br>
+4 seconden uitademen
+</p>
+<button class="back" onclick="openPage('home')">
+← Terug
+</button>
+</div>
+</div>
+
+<div id="ontspan" class="page">
+<div class="card">
+<h2>🧘 Ontspanning</h2>
+<p>
+Ga comfortabel zitten.
+Laat je schouders zakken.
+Ontspan je gezicht en je handen.
+</p>
+<p>
+Adem rustig in en uit.
+Voel hoe je lichaam contact maakt
+met de stoel of de grond.
+</p>
+<p>
+Je hoeft nergens naartoe.
+Dit moment is helemaal van jou.
+</p>
+<button class="back" onclick="openPage('home')">
+← Terug
+</button>
+</div>
+</div>
+
+<div id="slaap" class="page">
+<div class="card">
+<h2>🌙 Slaaphulp</h2>
+<p>
+Laat de gebeurtenissen van vandaag los.
+Je hoeft nu niets meer op te lossen.
+</p>
+<p>
+Sluit je ogen als dat prettig voelt.
+Adem langzaam en ontspan je lichaam.
+</p>
+<p>
+Morgen is er weer een nieuwe dag.
+Voor nu mag je uitrusten.
+</p>
+<button class="back" onclick="openPage('home')">
+← Terug
+</button>
+</div>
+</div>
+
+<div id="dagboek" class="page">
+<div class="card">
+<h2>📖 Mijn dagboek</h2>
+<p>Wat houdt je vandaag bezig?</p>
+<textarea id="tekst"
+placeholder="Schrijf hier je gedachten..."></textarea>
+<button onclick="bewaar()">Bewaren</button>
+<p id="melding"></p>
+<button class="back" onclick="openPage('home')">
+← Terug
+</button>
+</div>
+</div>
+
+<div id="gedachten" class="page">
+<div class="card">
+<h2>💚 Rustgedachten</h2>
 <p id="gedachte">
-Je hoeft niet alles vandaag te doen.
+Je mag het rustig aan doen.
 </p>
 <button onclick="nieuweGedachte()">
 Nieuwe rustgedachte
 </button>
-</section>
-
-<section class="card">
-<h2>📖 Mijn dagboek</h2>
-<p>Wat houdt je vandaag bezig?</p>
-<textarea id="dagboek"
-placeholder="Schrijf hier je gedachten..."></textarea>
-<button onclick="bewaar()">
-Bewaar mijn gedachten
+<button class="back" onclick="openPage('home')">
+← Terug
 </button>
-<p id="melding"></p>
-</section>
-
-<section class="card">
-<h2>🌙 Slaaphulp</h2>
-<p>
-Laat de dag los. Ontspan je schouders.
-Adem rustig en geef jezelf toestemming
-om uit te rusten.
-</p>
-</section>
+</div>
+</div>
 </main>
+
+<footer>
+🌿 Een beetje rust, elke dag
+</footer>
+
 <script>
-const gedachten = [
- "Je mag het rustig aan doen.",
- "Niet alles hoeft vandaag.",
- "Een kleine stap is ook vooruitgang.",
- "Je bent genoeg zoals je bent.",
- "Rust nemen is ook belangrijk."
-];
-function nieuweGedachte() {
- const i = Math.floor(Math.random()*gedachten.length);
- document.getElementById("gedachte").textContent =
- gedachten[i];
+function openPage(id){
+ document.querySelectorAll(".page")
+ .forEach(p=>p.classList.remove("active"));
+ document.getElementById(id)
+ .classList.add("active");
+ window.scrollTo(0,0);
 }
-const veld = document.getElementById("dagboek");
-try {
- veld.value = localStorage.getItem("dagboek") || "";
-} catch(e) {}
-function bewaar() {
- try {
-  localStorage.setItem("dagboek", veld.value);
-  document.getElementById("melding").textContent =
-   "Je gedachten zijn bewaard op dit apparaat.";
- } catch(e) {
-  document.getElementById("melding").textContent =
-   "Bewaren is niet gelukt.";
+
+const gedachten=[
+"Je mag het rustig aan doen.",
+"Niet alles hoeft vandaag.",
+"Je bent genoeg zoals je bent.",
+"Elke kleine stap telt.",
+"Rust nemen is geen tijdverspilling.",
+"Je hoeft niet altijd sterk te zijn.",
+"Vandaag mag je kiezen voor jezelf."
+];
+
+function nieuweGedachte(){
+ const i=Math.floor(Math.random()*gedachten.length);
+ document.getElementById("gedachte")
+ .textContent=gedachten[i];
+}
+
+const veld=document.getElementById("tekst");
+try{
+ veld.value=localStorage.getItem("dagboek")||"";
+}catch(e){}
+
+function bewaar(){
+ try{
+  localStorage.setItem("dagboek",veld.value);
+  document.getElementById("melding")
+  .textContent="Je gedachten zijn bewaard.";
+ }catch(e){
+  document.getElementById("melding")
+  .textContent="Bewaren is niet gelukt.";
  }
 }
 </script>
