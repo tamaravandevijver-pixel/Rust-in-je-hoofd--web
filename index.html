@@ -905,4 +905,113 @@ function toonPuzzel(){
   const goed=gekozenAntwoord===p[2];
   el("puzzelFeedback").textContent=
    (goed?"Goed gedaan! 💚 ":
-    "Het juiste antw
+    "Het juiste antwoord is: "+p[1][p[2]]+". ")
+   +p[3];
+ }else{
+  el("puzzelFeedback").textContent="";
+ }
+
+ el("toonAntwoord").disabled=antwoordGetoond;
+}
+
+function kiesAntwoord(i){
+ if(antwoordGetoond)return;
+ gekozenAntwoord=i;
+ antwoordGetoond=true;
+ toonPuzzel();
+}
+
+function toonPuzzelAntwoord(){
+ antwoordGetoond=true;
+ toonPuzzel();
+}
+
+el("niveau").addEventListener("change",()=>{
+ niveau=el("niveau").value;
+ schrijfInstelling("rust_niveau",niveau);
+
+ if(puzzelIndex[niveau]<0){
+  volgendePuzzel();
+ }else{
+  gekozenAntwoord=null;
+  antwoordGetoond=false;
+  toonPuzzel();
+ }
+});
+
+/* HERINNERINGEN */
+let herinneringAan=
+ leesInstelling("rust_herinnering","false")==="true";
+
+el("herinnering").checked=herinneringAan;
+
+let actieveTijd=0;
+let laatsteTik=performance.now();
+
+function sluitHerinnering(){
+ el("herinneringsKaart").hidden=true;
+}
+
+function openHerinnering(){
+ sluitHerinnering();
+ openPage("puzzels");
+ volgendePuzzel();
+}
+
+el("herinnering").addEventListener("change",()=>{
+ herinneringAan=el("herinnering").checked;
+
+ schrijfInstelling(
+  "rust_herinnering",
+  String(herinneringAan)
+ );
+
+ actieveTijd=0;
+ laatsteTik=performance.now();
+ sluitHerinnering();
+});
+
+setInterval(()=>{
+ const nu=performance.now();
+ const verschil=Math.min(
+  1000,Math.max(0,nu-laatsteTik)
+ );
+ laatsteTik=nu;
+
+ if(!herinneringAan||
+    document.hidden||
+    !document.hasFocus())return;
+
+ actieveTijd+=verschil;
+
+ if(actieveTijd>=1800000){
+  actieveTijd=0;
+  el("herinneringsKaart").hidden=false;
+ }
+},1000);
+
+/* PAUZEREN BIJ VERLATEN APP */
+document.addEventListener("visibilitychange",()=>{
+ laatsteTik=performance.now();
+
+ if(document.hidden){
+  sluitHerinnering();
+  if(ademLoopt)startAdem();
+  if(ontspanLoopt)startOntspan();
+ }
+});
+
+window.addEventListener("blur",()=>{
+ laatsteTik=performance.now();
+});
+
+window.addEventListener("focus",()=>{
+ laatsteTik=performance.now();
+});
+
+/* START */
+volgendePuzzel();
+
+</script>
+</body>
+</html>
