@@ -22,38 +22,47 @@ header{
 }
 .logo{font-size:55px}
 h1{font-size:32px;margin:12px 0}
-h2{font-size:24px}
+h2{font-size:23px}
 p{line-height:1.6}
-main{max-width:520px;margin:auto;padding:22px}
+main{max-width:520px;margin:auto;padding:20px}
 .card{
  background:white;
  border-radius:22px;
- padding:24px;
+ padding:22px;
  margin-bottom:18px;
  box-shadow:0 4px 18px #234a3612;
 }
 button{
  width:100%;
- padding:16px;
- margin:8px 0;
+ padding:15px;
+ margin:7px 0;
  border:0;
- border-radius:15px;
+ border-radius:14px;
  background:#79aa91;
  color:white;
- font-size:17px;
+ font-size:16px;
  font-weight:bold;
  cursor:pointer;
+ touch-action:manipulation;
 }
-button:active{background:#4d8169}
-button:focus-visible,
-select:focus-visible,
-input:focus-visible{
+button:disabled{opacity:.55;cursor:default}
+button:focus-visible{
  outline:3px solid #34584b;
  outline-offset:2px;
 }
 .back{background:#789a89}
 .page{display:none}
 .page.active{display:block}
+.center{text-align:center}
+.small{font-size:14px;color:#739384}
+.timer{
+ font-size:34px;
+ font-weight:bold;
+ font-variant-numeric:tabular-nums;
+ margin:15px 0;
+}
+.controls{display:flex;gap:8px}
+.controls button{flex:1;min-width:0}
 textarea{
  width:100%;
  min-height:150px;
@@ -62,21 +71,35 @@ textarea{
  padding:14px;
  font-size:16px;
 }
-footer{
- text-align:center;
- padding:25px;
- color:#739384;
+select{
+ width:100%;
+ padding:13px;
+ border:1px solid #9ab7a5;
+ border-radius:12px;
+ background:white;
+ color:#34584b;
+ font-size:17px;
 }
-.center{text-align:center}
-.small{font-size:14px;color:#739384}
-.timer{
- font-size:36px;
- font-weight:bold;
- font-variant-numeric:tabular-nums;
- margin:15px 0;
+.setting{
+ background:#f3f8f4;
+ border-radius:15px;
+ padding:15px;
+ margin:12px 0;
 }
-.controls{display:flex;gap:10px}
-.controls button{flex:1;min-width:0}
+.setting label{
+ display:flex;
+ align-items:center;
+ gap:10px;
+}
+.setting input[type=checkbox]{
+ width:22px;
+ height:22px;
+ accent-color:#548c71;
+}
+.setting input[type=range]{
+ width:100%;
+ accent-color:#548c71;
+}
 .circle{
  width:150px;
  height:150px;
@@ -96,62 +119,140 @@ footer{
  0%,100%{transform:scale(.75)}
  50%{transform:scale(1.2)}
 }
-#ademTekst{
- font-size:25px;
- font-weight:bold;
- min-height:36px;
-}
-.setting{
- background:#f3f8f4;
- border-radius:15px;
- padding:16px;
- margin:12px 0;
-}
-.setting label{
- display:flex;
- align-items:center;
- gap:12px;
- font-size:17px;
-}
-.setting input[type=checkbox]{
- width:22px;
- height:22px;
- accent-color:#548c71;
-}
-.setting input[type=range]{
- width:100%;
- accent-color:#548c71;
- margin-top:12px;
-}
-#ontspanTekst{
- font-size:20px;
- line-height:1.65;
- min-height:125px;
-}
-select{
- width:100%;
- padding:13px;
- border:1px solid #9ab7a5;
- border-radius:12px;
- background:white;
- color:#34584b;
- font-size:17px;
+#ademTekst{font-size:24px;font-weight:bold}
+#ontspanTekst{font-size:20px;min-height:125px}
+footer{
+ text-align:center;
+ padding:25px;
+ color:#739384;
 }
 .choice{
  background:#edf5ef;
  color:#34584b;
  text-align:left;
  font-weight:normal;
- border:2px solid transparent;
 }
 .choice.selected{
- border-color:#34584b;
- background:#d7eadd;
+ outline:2px solid #34584b;
 }
 .feedback{
  font-weight:bold;
  min-height:25px;
 }
+.game-tabs{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+ margin:16px 0;
+}
+.game-tabs button{margin:0;font-size:14px}
+.game-tabs button.active{
+ background:#34584b;
+}
+.game-panel{display:none}
+.game-panel.active{display:block}
+.game-status{
+ text-align:center;
+ min-height:30px;
+ font-weight:bold;
+ margin:12px 0;
+}
+.memory-grid{
+ display:grid;
+ gap:8px;
+ margin:15px auto;
+ max-width:350px;
+}
+.memory-card{
+ aspect-ratio:1;
+ margin:0;
+ padding:0;
+ background:#c9dfd1;
+ color:#34584b;
+ font-size:30px;
+ border-radius:12px;
+}
+.memory-card.open{
+ background:#f0f8f2;
+}
+.memory-card.matched{
+ background:#d5ead9;
+}
+.word-grid{
+ display:grid;
+ gap:3px;
+ margin:16px auto;
+ width:100%;
+ max-width:380px;
+}
+.word-cell{
+ aspect-ratio:1;
+ min-width:0;
+ padding:0;
+ margin:0;
+ border-radius:5px;
+ background:#e8f1eb;
+ color:#34584b;
+ font-size:clamp(10px,3.2vw,17px);
+}
+.word-cell.picked{background:#83b99b}
+.word-cell.found{
+ background:#4f8e6d;
+ color:white;
+}
+.word-list{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+}
+.word-tag{
+ padding:7px 10px;
+ background:#edf5ef;
+ border-radius:9px;
+ font-size:14px;
+}
+.word-tag.done{
+ text-decoration:line-through;
+ color:#739384;
+}
+.slide-grid{
+ display:grid;
+ gap:5px;
+ margin:15px auto;
+ max-width:350px;
+}
+.slide-tile{
+ aspect-ratio:1;
+ margin:0;
+ padding:0;
+ border-radius:10px;
+ font-size:24px;
+ background:#a4d3b7;
+ color:#34584b;
+}
+.slide-tile.empty{
+ background:#f0f5f1;
+}
+.sequence-grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+ max-width:300px;
+ margin:20px auto;
+}
+.sequence-pad{
+ aspect-ratio:1;
+ border-radius:18px;
+ opacity:.7;
+ margin:0;
+ border:3px solid transparent;
+}
+.sequence-pad.lit{
+ opacity:1;
+ border-color:#34584b;
+ transform:scale(1.04);
+}
+.sequence-pad:disabled{opacity:.7}
 .reminder{
  position:fixed;
  bottom:12px;
@@ -167,14 +268,13 @@ select{
  z-index:10;
 }
 .reminder[hidden]{display:none}
-.muted{background:#789a89}
 @media(prefers-reduced-motion:reduce){
  .circle.beweegt{animation:none}
 }
 </style>
 </head>
-
 <body>
+
 <header>
 <div class="logo">🌿</div>
 <h1>Rust in je hoofd</h1>
@@ -183,73 +283,43 @@ select{
 
 <main>
 
-<!-- HOOFDMENU -->
 <section id="home" class="page active">
 <div class="card">
 <h2>Welkom 💚</h2>
-<p>
-Je hoeft even helemaal niets.
-Kies wat jij op dit moment nodig hebt.
-</p>
-<button onclick="openPage('adem')">
-🌬️ Ademhaling
-</button>
-<button onclick="openPage('ontspan')">
-🧘 Ontspanning
-</button>
-<button onclick="openPage('slaap')">
-🌙 Slaaphulp
-</button>
-<button onclick="openPage('dagboek')">
-📖 Mijn dagboek
-</button>
-<button onclick="openPage('gedachten')">
-💚 Rustgedachten
-</button>
-<button onclick="openPage('puzzels')">
-🧩 Even uit je hoofd
-</button>
+<p>Je hoeft even helemaal niets.
+Kies wat jij op dit moment nodig hebt.</p>
+<button onclick="openPage('adem')">🌬️ Ademhaling</button>
+<button onclick="openPage('ontspan')">🧘 Ontspanning</button>
+<button onclick="openPage('slaap')">🌙 Slaaphulp</button>
+<button onclick="openPage('dagboek')">📖 Mijn dagboek</button>
+<button onclick="openPage('gedachten')">💚 Rustgedachten</button>
+<button onclick="openPage('puzzels')">🧩 Even uit je hoofd</button>
 </div>
 </section>
 
-<!-- ADEMHALING -->
 <section id="adem" class="page">
 <div class="card">
 <h2>🌬️ Ademhaling</h2>
 <p>Volg rustig de beweging van de cirkel.</p>
 <div id="ademCirkel" class="circle">🌿</div>
-<p id="ademTekst" class="center">
-Klaar om te beginnen?
-</p>
+<p id="ademTekst" class="center">Klaar om te beginnen?</p>
 <p class="center small">
-4 seconden inademen<br>
-4 seconden uitademen
+4 seconden inademen<br>4 seconden uitademen
 </p>
-<div id="ademTimer" class="timer center">
-02:00
-</div>
+<div id="ademTimer" class="timer center">02:00</div>
 <div class="controls">
-<button id="ademStart" onclick="startAdem()">
-▶ Start
-</button>
-<button onclick="resetAdem()">
-↻ Opnieuw
-</button>
+<button id="ademStart" onclick="startAdem()">▶ Start</button>
+<button onclick="resetAdem()">↻ Opnieuw</button>
 </div>
-<button class="back" onclick="openPage('home')">
-← Terug
-</button>
+<button class="back" onclick="openPage('home')">← Terug</button>
 </div>
 </section>
 
-<!-- ONTSPANNING -->
 <section id="ontspan" class="page">
 <div class="card">
 <h2>🧘 Ontspanning</h2>
-<p>
-Neem vijf minuten voor jezelf.
-Ga comfortabel zitten of liggen.
-</p>
+<p>Neem vijf minuten voor jezelf.
+Ga comfortabel zitten of liggen.</p>
 
 <div class="setting">
 <label>
@@ -257,7 +327,7 @@ Ga comfortabel zitten of liggen.
 🔊 Gesproken begeleiding
 </label>
 <p class="small">
-Standaard uit. De app gebruikt bij voorkeur
+Standaard uit. De app kiest bij voorkeur
 een Nederlandse vrouwenstem als die beschikbaar is.
 </p>
 </div>
@@ -268,8 +338,7 @@ een Nederlandse vrouwenstem als die beschikbaar is.
 🐦 Bosgeluiden met vogels
 </label>
 <p class="small">
-Deze optie werkt zodra je later
-bosgeluiden.mp3 toevoegt.
+Werkt zodra je later bosgeluiden.mp3 toevoegt.
 </p>
 <label for="volume">Volume bosgeluiden</label>
 <input type="range" id="volume"
@@ -278,54 +347,33 @@ bosgeluiden.mp3 toevoegt.
 </div>
 
 <div class="center">
-<div style="font-size:48px;margin:20px">
-🌳🐦🌿
-</div>
+<div style="font-size:48px;margin:20px">🌳🐦🌿</div>
 <p id="ontspanTekst">
 Klaar voor een moment van rust?
 </p>
-<div id="ontspanTimer" class="timer">
-05:00
+<div id="ontspanTimer" class="timer">05:00</div>
 </div>
-</div>
-
 <div class="controls">
-<button id="ontspanStart" onclick="startOntspan()">
-▶ Start
-</button>
-<button onclick="stopOntspan()">
-⏹ Stop
-</button>
+<button id="ontspanStart" onclick="startOntspan()">▶ Start</button>
+<button onclick="stopOntspan()">⏹ Stop</button>
 </div>
-<button class="back" onclick="openPage('home')">
-← Terug
-</button>
+<button class="back" onclick="openPage('home')">← Terug</button>
 </div>
 </section>
 
-<!-- SLAAPHULP -->
 <section id="slaap" class="page">
 <div class="card">
 <h2>🌙 Slaaphulp</h2>
-<p>
-Laat de gebeurtenissen van vandaag los.
-Je hoeft nu niets meer op te lossen.
-</p>
-<p>
-Sluit je ogen als dat prettig voelt.
-Adem langzaam en ontspan je lichaam.
-</p>
-<p>
-Morgen is er weer een nieuwe dag.
-Voor nu mag je uitrusten.
-</p>
-<button class="back" onclick="openPage('home')">
-← Terug
-</button>
+<p>Laat de gebeurtenissen van vandaag los.
+Je hoeft nu niets meer op te lossen.</p>
+<p>Sluit je ogen als dat prettig voelt.
+Adem langzaam en ontspan je lichaam.</p>
+<p>Morgen is er weer een nieuwe dag.
+Voor nu mag je uitrusten.</p>
+<button class="back" onclick="openPage('home')">← Terug</button>
 </div>
 </section>
 
-<!-- DAGBOEK -->
 <section id="dagboek" class="page">
 <div class="card">
 <h2>📖 Mijn dagboek</h2>
@@ -334,51 +382,36 @@ Voor nu mag je uitrusten.
  placeholder="Schrijf hier je gedachten..."></textarea>
 <button onclick="bewaar()">Bewaren</button>
 <p id="melding"></p>
-<button class="back" onclick="openPage('home')">
-← Terug
-</button>
+<button class="back" onclick="openPage('home')">← Terug</button>
 </div>
 </section>
 
-<!-- RUSTGEDACHTEN -->
 <section id="gedachten" class="page">
 <div class="card">
 <h2>💚 Rustgedachten</h2>
-<p id="gedachte">
-Je mag het rustig aan doen.
-</p>
-<button onclick="nieuweGedachte()">
-Nieuwe rustgedachte
-</button>
-<button class="back" onclick="openPage('home')">
-← Terug
-</button>
+<p id="gedachte">Je mag het rustig aan doen.</p>
+<button onclick="nieuweGedachte()">Nieuwe rustgedachte</button>
+<button class="back" onclick="openPage('home')">← Terug</button>
 </div>
 </section>
 
-<!-- PUZZELS -->
 <section id="puzzels" class="page">
 <div class="card">
 <h2>🧩 Even uit je hoofd</h2>
 <p>
-Een kleine uitdaging om je aandacht
-te verleggen. Zonder haast of prestatiedruk.
+Kies een kleine uitdaging om je aandacht
+even ergens anders op te richten.
+Je speelt zonder tijdsdruk.
 </p>
 
 <div class="setting">
-<label for="niveau">
-Moeilijkheidsgraad
-</label>
+<label for="niveau">Moeilijkheidsgraad</label>
 <select id="niveau">
 <option value="makkelijk">🌱 Makkelijk</option>
-<option value="gemiddeld" selected>
-🌿 Gemiddeld
-</option>
+<option value="gemiddeld" selected>🌿 Gemiddeld</option>
 <option value="moeilijk">🌳 Moeilijk</option>
 </select>
-<p class="small">
-Je keuze wordt onthouden.
-</p>
+<p class="small">Je keuze wordt onthouden.</p>
 </div>
 
 <div class="setting">
@@ -387,27 +420,94 @@ Je keuze wordt onthouden.
 🔔 Herinner mij iedere 30 minuten
 </label>
 <p class="small">
-Standaard uit. De herinnering verschijnt
-alleen zolang de app open en actief is.
+Standaard uit. Werkt zolang deze app
+open en actief is.
 </p>
 </div>
 
-<p id="puzzelSoort" class="small"></p>
+<div class="game-tabs">
+<button id="tab-vragen" onclick="toonSpel('vragen')">
+💡 Hersenkrakers
+</button>
+<button id="tab-memory" onclick="toonSpel('memory')">
+🃏 Memory
+</button>
+<button id="tab-woorden" onclick="toonSpel('woorden')">
+🔤 Woordzoeker
+</button>
+<button id="tab-schuiven" onclick="toonSpel('schuiven')">
+🔢 Schuifpuzzel
+</button>
+<button id="tab-reeks" onclick="toonSpel('reeks')">
+🎨 Geheugenspel
+</button>
+</div>
+
+<div id="game-vragen" class="game-panel">
+<p class="small">Kies het juiste antwoord.</p>
 <h2 id="puzzelVraag"></h2>
 <div id="puzzelOpties"></div>
-<p id="puzzelFeedback"
- class="feedback" role="status"></p>
-
-<button id="toonAntwoord"
- onclick="toonPuzzelAntwoord()">
+<p id="puzzelFeedback" class="feedback" role="status"></p>
+<button id="toonAntwoord" onclick="toonPuzzelAntwoord()">
 💡 Toon antwoord
 </button>
-<button onclick="volgendePuzzel()">
-🔄 Volgende puzzel
-</button>
-<button class="back" onclick="openPage('home')">
-← Terug
-</button>
+<button onclick="volgendePuzzel()">🔄 Volgende vraag</button>
+</div>
+
+<div id="game-memory" class="game-panel">
+<h2>🃏 Memory</h2>
+<p>Draai twee kaartjes om en zoek dezelfde plaatjes.</p>
+<div id="memoryStatus" class="game-status" role="status"></div>
+<div id="memoryGrid" class="memory-grid"></div>
+<button onclick="nieuwMemory()">🔄 Nieuw spel</button>
+</div>
+
+<div id="game-woorden" class="game-panel">
+<h2>🔤 Woordzoeker</h2>
+<p>
+Tik de eerste en daarna de laatste letter
+van een woord aan. Woorden kunnen ook
+achterstevoren staan.
+</p>
+<div id="woordStatus" class="game-status" role="status"></div>
+<div id="woordLijst" class="word-list"></div>
+<div id="woordGrid" class="word-grid"></div>
+<button onclick="nieuwWoordspel()">🔄 Nieuwe woordzoeker</button>
+</div>
+
+<div id="game-schuiven" class="game-panel">
+<h2>🔢 Schuifpuzzel</h2>
+<p>
+Tik op een vakje naast het lege vak
+om het te verschuiven. Zet alle cijfers
+in de juiste volgorde.
+</p>
+<div id="schuifStatus" class="game-status" role="status"></div>
+<div id="schuifGrid" class="slide-grid"></div>
+<button onclick="nieuwSchuifspel()">🔄 Nieuwe puzzel</button>
+</div>
+
+<div id="game-reeks" class="game-panel">
+<h2>🎨 Geheugenspel</h2>
+<p>
+Kijk naar de oplichtende kleuren.
+Tik ze daarna in dezelfde volgorde aan.
+</p>
+<div id="reeksStatus" class="game-status" role="status"></div>
+<div id="reeksGrid" class="sequence-grid">
+<button class="sequence-pad" style="background:#ed9b9b"
+ onclick="kiesKleur(0)" aria-label="Rood"></button>
+<button class="sequence-pad" style="background:#92b9e3"
+ onclick="kiesKleur(1)" aria-label="Blauw"></button>
+<button class="sequence-pad" style="background:#e8cc79"
+ onclick="kiesKleur(2)" aria-label="Geel"></button>
+<button class="sequence-pad" style="background:#90cba4"
+ onclick="kiesKleur(3)" aria-label="Groen"></button>
+</div>
+<button onclick="nieuwReeksspel()">▶ Nieuwe reeks</button>
+</div>
+
+<button class="back" onclick="openPage('home')">← Terug</button>
 </div>
 </section>
 
@@ -415,55 +515,56 @@ alleen zolang de app open en actief is.
 
 <footer>🌿 Een beetje rust, elke dag</footer>
 
-<div id="herinneringsKaart"
- class="reminder" hidden>
+<div id="herinneringsKaart" class="reminder" hidden>
 <strong>🧩 Even uit je hoofd?</strong>
-<p>
-Tijd voor een kleine puzzel!
-Je mag ook gewoon verdergaan.
-</p>
+<p>Tijd voor een kleine uitdaging!
+Je mag ook gewoon verdergaan.</p>
 <div class="controls">
-<button onclick="openHerinnering()">
-Bekijk puzzel
-</button>
-<button class="muted"
- onclick="sluitHerinnering()">
-Niet nu
-</button>
+<button onclick="openHerinnering()">Bekijk spel</button>
+<button class="back" onclick="sluitHerinnering()">Niet nu</button>
 </div>
 </div>
 
 <audio id="bosAudio"
- src="bosgeluiden.mp3"
- loop preload="none"></audio>
+ src="bosgeluiden.mp3" loop preload="none"></audio>
 
 <script>
 const el=id=>document.getElementById(id);
 
-function leesInstelling(sleutel,standaard){
+function lees(s,d){
  try{
-  const v=localStorage.getItem(sleutel);
-  return v===null?standaard:v;
- }catch(e){
-  return standaard;
+  const v=localStorage.getItem(s);
+  return v===null?d:v;
+ }catch(e){return d}
+}
+function schrijf(s,v){
+ try{localStorage.setItem(s,v)}catch(e){}
+}
+function tijd(ms){
+ const s=Math.ceil(Math.max(0,ms)/1000);
+ return String(Math.floor(s/60)).padStart(2,"0")
+ +":"+String(s%60).padStart(2,"0");
+}
+function willekeurig(n){
+ return Math.floor(Math.random()*n);
+}
+function schud(a){
+ const b=[...a];
+ for(let i=b.length-1;i>0;i--){
+  const j=willekeurig(i+1);
+  [b[i],b[j]]=[b[j],b[i]];
  }
+ return b;
 }
 
-function schrijfInstelling(sleutel,waarde){
- try{
-  localStorage.setItem(sleutel,waarde);
- }catch(e){}
-}
-
-/* PAGINA'S */
+/* NAVIGATIE */
 function openPage(id){
  if(id!=="adem")resetAdem();
  if(id!=="ontspan")stopOntspan();
+ if(id!=="puzzels")stopReeks();
  sluitHerinnering();
-
  document.querySelectorAll(".page")
- .forEach(p=>p.classList.remove("active"));
-
+  .forEach(p=>p.classList.remove("active"));
  el(id).classList.add("active");
  window.scrollTo(0,0);
 }
@@ -478,16 +579,14 @@ const gedachten=[
  "Je hoeft niet altijd sterk te zijn.",
  "Vandaag mag je kiezen voor jezelf."
 ];
-
 function nieuweGedachte(){
- const i=Math.floor(Math.random()*gedachten.length);
- el("gedachte").textContent=gedachten[i];
+ el("gedachte").textContent=
+ gedachten[willekeurig(gedachten.length)];
 }
 
 /* DAGBOEK */
 const veld=el("tekst");
-veld.value=leesInstelling("dagboek","");
-
+veld.value=lees("dagboek","");
 function bewaar(){
  try{
   localStorage.setItem("dagboek",veld.value);
@@ -499,13 +598,6 @@ function bewaar(){
  }
 }
 
-/* TIMER */
-function tijdTekst(ms){
- const s=Math.ceil(Math.max(0,ms)/1000);
- return String(Math.floor(s/60)).padStart(2,"0")
- +":"+String(s%60).padStart(2,"0");
-}
-
 /* ADEMHALING */
 let ademOver=120000;
 let ademLoopt=false;
@@ -515,19 +607,14 @@ let ademVerstreken=0;
 
 function updateAdem(){
  if(!ademLoopt)return;
-
- ademOver=Math.max(
-  0,ademEind-performance.now()
- );
- el("ademTimer").textContent=tijdTekst(ademOver);
+ ademOver=Math.max(0,ademEind-performance.now());
+ el("ademTimer").textContent=tijd(ademOver);
 
  const fase=Math.floor(
   (120000-ademOver)/4000
  )%2;
-
  el("ademTekst").textContent=
-  fase===0?"Adem rustig in 🌿":
-  "Adem rustig uit 🍃";
+ fase===0?"Adem rustig in 🌿":"Adem rustig uit 🍃";
 
  if(ademOver<=0){
   clearInterval(ademInterval);
@@ -538,12 +625,9 @@ function updateAdem(){
   el("ademStart").textContent="▶ Opnieuw starten";
  }
 }
-
 function startAdem(){
  if(ademLoopt){
-  ademOver=Math.max(
-   0,ademEind-performance.now()
-  );
+  ademOver=Math.max(0,ademEind-performance.now());
   ademVerstreken=120000-ademOver;
   ademLoopt=false;
   clearInterval(ademInterval);
@@ -553,21 +637,17 @@ function startAdem(){
   el("ademTekst").textContent="Even pauze 💚";
   return;
  }
-
  if(ademOver<=0)resetAdem();
-
  ademLoopt=true;
  ademEind=performance.now()+ademOver;
  el("ademCirkel").classList.add("beweegt");
  el("ademCirkel").style.animationDelay=
-  (-ademVerstreken/1000)+"s";
+ (-ademVerstreken/1000)+"s";
  el("ademCirkel").style.animationPlayState="running";
  el("ademStart").textContent="⏸ Pauze";
-
  ademInterval=setInterval(updateAdem,100);
  updateAdem();
 }
-
 function resetAdem(){
  ademLoopt=false;
  clearInterval(ademInterval);
@@ -605,89 +685,68 @@ const oefening=[
 
 function kiesStem(){
  if(!("speechSynthesis" in window))return null;
-
  const nl=speechSynthesis.getVoices().filter(
   v=>v.lang.toLowerCase().startsWith("nl")
  );
-
  return nl.find(v=>
   /female|vrouw|femke|claire|lotte/i.test(v.name)
  )||nl[0]||null;
 }
-
 function spreek(t){
  if(!el("stemAan").checked)return;
  if(!("speechSynthesis" in window))return;
-
  speechSynthesis.cancel();
-
  const zin=new SpeechSynthesisUtterance(t);
  zin.lang="nl-NL";
  zin.rate=.85;
  zin.pitch=1;
  zin.volume=.9;
-
  const stem=kiesStem();
  if(stem)zin.voice=stem;
-
  speechSynthesis.speak(zin);
 }
-
 function stopStem(){
  if("speechSynthesis" in window){
   speechSynthesis.cancel();
  }
 }
-
 function speelBos(){
  if(!el("bosAan").checked||!ontspanLoopt)return;
-
  const a=el("bosAudio");
  a.volume=Number(el("volume").value)/100;
-
  a.play().then(()=>{
   el("bosStatus").textContent="";
  }).catch(()=>{
   el("bosStatus").textContent=
-   "Bosgeluiden zijn nog niet beschikbaar.";
+  "Bosgeluiden zijn nog niet beschikbaar.";
  });
 }
-
-function stopBos(){
- el("bosAudio").pause();
-}
+function stopBos(){el("bosAudio").pause()}
 
 el("bosAan").addEventListener("change",()=>{
- if(el("bosAan").checked){
-  speelBos();
- }else{
+ if(el("bosAan").checked) speelBos();
+ else{
   stopBos();
   el("bosStatus").textContent="";
  }
 });
-
 el("volume").addEventListener("input",()=>{
  el("bosAudio").volume=
-  Number(el("volume").value)/100;
+ Number(el("volume").value)/100;
 });
-
 el("stemAan").addEventListener("change",()=>{
- if(!el("stemAan").checked){
-  stopStem();
- }else if(ontspanLoopt){
+ if(!el("stemAan").checked)stopStem();
+ else if(ontspanLoopt){
   spreek(el("ontspanTekst").textContent);
  }
 });
 
 function updateOntspan(){
  if(!ontspanLoopt)return;
-
  ontspanOver=Math.max(
   0,ontspanEind-performance.now()
  );
- el("ontspanTimer").textContent=
-  tijdTekst(ontspanOver);
-
+ el("ontspanTimer").textContent=tijd(ontspanOver);
  if(ontspanOver<=0){
   clearInterval(ontspanInterval);
   ontspanInterval=null;
@@ -695,24 +754,21 @@ function updateOntspan(){
   stopBos();
   stopStem();
   el("ontspanTekst").textContent=
-   "De oefening is afgelopen. Neem rustig de tijd om terug te komen. 💚";
+  "De oefening is afgelopen. Neem rustig de tijd om terug te komen. 💚";
   el("ontspanStart").textContent="▶ Opnieuw";
   spreek("De oefening is afgelopen. Neem rustig de tijd om terug te komen.");
   return;
  }
-
  const stap=Math.min(
   oefening.length-1,
   Math.floor((300000-ontspanOver)/30000)
  );
-
  if(stap!==laatsteStap){
   laatsteStap=stap;
   el("ontspanTekst").textContent=oefening[stap];
   spreek(oefening[stap]);
  }
 }
-
 function startOntspan(){
  if(ontspanLoopt){
   ontspanOver=Math.max(
@@ -726,27 +782,21 @@ function startOntspan(){
   el("ontspanStart").textContent="▶ Verder";
   return;
  }
-
  if(ontspanOver<=0){
   ontspanOver=300000;
   laatsteStap=-1;
  }
-
  ontspanLoopt=true;
  ontspanEind=performance.now()+ontspanOver;
  el("ontspanStart").textContent="⏸ Pauze";
-
  if(el("bosAan").checked)speelBos();
-
- const vorigeStap=laatsteStap;
+ const vorige=laatsteStap;
  ontspanInterval=setInterval(updateOntspan,200);
  updateOntspan();
-
- if(el("stemAan").checked&&vorigeStap>=0){
+ if(el("stemAan").checked&&vorige>=0){
   spreek(el("ontspanTekst").textContent);
  }
 }
-
 function stopOntspan(){
  ontspanLoopt=false;
  clearInterval(ontspanInterval);
@@ -757,261 +807,34 @@ function stopOntspan(){
  el("bosAudio").currentTime=0;
  stopStem();
  el("ontspanTekst").textContent=
-  "Klaar voor een moment van rust?";
+ "Klaar voor een moment van rust?";
  el("ontspanStart").textContent="▶ Start";
  el("ontspanTimer").textContent="05:00";
 }
 
-/* PUZZELS */
+/* INSTELLINGEN PUZZELS */
 const puzzels={
  makkelijk:[
-  ["Welk woord hoort er niet bij?",
-   ["Appel","Peer","Wortel","Banaan"],2,
-   "Een wortel is een groente. De rest is fruit."],
   ["Wat komt na 2, 4, 6, 8?",
    ["9","10","12","14"],1,
    "Er komt steeds 2 bij."],
   ["Welk dier kan vliegen?",
    ["Egel","Merel","Konijn","Vos"],1,
    "Een merel is een vogel."],
-  ["Hoeveel dagen zitten er in een week?",
-   ["5","6","7","8"],2,
-   "Een week heeft 7 dagen."],
-  ["Welk woord rijmt op maan?",
-   ["Boom","Baan","Vis","Huis"],1,
-   "Maan en baan rijmen."],
   ["Wat is de helft van 18?",
    ["6","8","9","12"],2,
    "18 gedeeld door 2 is 9."],
-  ["Welk seizoen volgt op de lente?",
-   ["Winter","Herfst","Zomer","Lente"],2,
-   "Na de lente komt de zomer."],
-  ["Wat is zwaarder?",
-   ["1 kilo veren","1 kilo stenen",
-    "Ze wegen evenveel","Dat weet je niet"],2,
-   "Een kilo is altijd even zwaar."]
+  ["Welk woord hoort er niet bij?",
+   ["Appel","Peer","Wortel","Banaan"],2,
+   "Een wortel is een groente."]
  ],
  gemiddeld:[
   ["Welk getal volgt? 2, 6, 12, 20, ...",
    ["26","28","30","32"],2,
-   "De verschillen zijn 4, 6, 8 en daarna 10."],
-  ["Een boek kost €12. Je krijgt €5 korting.",
-   ["€5","€7","€8","€17"],1,
-   "12 min 5 is 7."],
-  ["Welk woord kun je maken van R E G E N?",
-   ["Groen","Regen","Grens","Ringen"],1,
-   "De letters vormen REGEN."],
-  ["Als gisteren maandag was, welke dag is morgen?",
-   ["Dinsdag","Woensdag","Donderdag","Zondag"],1,
-   "Vandaag is dinsdag. Morgen is woensdag."],
+   "De verschillen zijn 4, 6, 8 en 10."],
   ["Wat komt hierna? A, C, E, G, ...",
    ["H","I","J","K"],1,
-   "Je slaat steeds één letter over."],
-  ["Er staan 4 kaarsen. Je blaast er 2 uit. Hoeveel staan er nog?",
-   ["2","3","4","0"],2,
-   "Alle vier staan er nog, maar twee branden niet meer."],
-  ["Welke combinatie is een tegenstelling?",
-   ["Warm – heet","Klein – groot",
-    "Blij – vrolijk","Snel – vlug"],1,
-   "Klein en groot zijn tegengestelden."],
+   "Je slaat steeds een letter over."],
   ["Een trein vertrekt om 14:20 en rijdt 45 minuten. Aankomst?",
    ["14:55","15:00","15:05","15:15"],2,
-   "14:20 plus 45 minuten is 15:05."]
- ],
- moeilijk:[
-  ["Een klok loopt elk uur 5 minuten achter. Om 12:00 staat hij goed. Wat toont hij na 6 echte uren?",
-   ["17:00","17:30","18:00","18:30"],1,
-   "Zes keer vijf minuten achterstand is 30 minuten."],
-  ["Welk getal volgt? 1, 1, 2, 3, 5, 8, ...",
-   ["11","12","13","15"],2,
-   "Elk getal is de som van de vorige twee."],
-  ["Drie dozen bevatten samen 24 knikkers. Elke volgende doos bevat 2 meer dan de vorige. Hoeveel zitten in de middelste?",
-   ["6","8","10","12"],1,
-   "De aantallen zijn 6, 8 en 10."],
-  ["Je gooit twee dobbelstenen. Hoeveel verschillende uitkomsten geven samen 7?",
-   ["4","5","6","7"],2,
-   "Er zijn zes geordende combinaties."],
-  ["Een getal wordt verdubbeld en daarna met 6 verhoogd. De uitkomst is 30. Welk getal?",
-   ["10","12","14","18"],1,
-   "(30 - 6) gedeeld door 2 is 12."],
-  ["Wat komt hierna? 3, 9, 27, 81, ...",
-   ["108","162","243","324"],2,
-   "Elk getal wordt met 3 vermenigvuldigd."],
-  ["Vier mensen geven elkaar allemaal één keer een hand. Hoeveel handdrukken?",
-   ["4","6","8","12"],1,
-   "Er zijn zes verschillende paren."],
-  ["Een slak klimt overdag 3 meter en glijdt 's nachts 2 meter terug. Op welke dag bereikt hij een muur van 5 meter?",
-   ["Dag 2","Dag 3","Dag 4","Dag 5"],2,
-   "Op dag 3 bereikt hij de top."]
- ]
-};
-
-let niveau=leesInstelling(
- "rust_niveau","gemiddeld"
-);
-if(!puzzels[niveau])niveau="gemiddeld";
-
-el("niveau").value=niveau;
-
-let puzzelIndex={
- makkelijk:-1,
- gemiddeld:-1,
- moeilijk:-1
-};
-let gekozenAntwoord=null;
-let antwoordGetoond=false;
-
-function huidigePuzzel(){
- return puzzels[niveau][puzzelIndex[niveau]];
-}
-
-function volgendePuzzel(){
- const lijst=puzzels[niveau];
- let n=Math.floor(Math.random()*lijst.length);
-
- if(lijst.length>1&&n===puzzelIndex[niveau]){
-  n=(n+1)%lijst.length;
- }
-
- puzzelIndex[niveau]=n;
- gekozenAntwoord=null;
- antwoordGetoond=false;
- toonPuzzel();
-}
-
-function toonPuzzel(){
- const p=huidigePuzzel();
- if(!p)return;
-
- el("puzzelSoort").textContent=
-  "Moeilijkheid: "+niveau;
-
- el("puzzelVraag").textContent=p[0];
-
- const vak=el("puzzelOpties");
- vak.replaceChildren();
-
- p[1].forEach((antwoord,i)=>{
-  const knop=document.createElement("button");
-  knop.className="choice"+
-   (gekozenAntwoord===i?" selected":"");
-  knop.textContent=antwoord;
-  knop.disabled=antwoordGetoond;
-  knop.onclick=()=>kiesAntwoord(i);
-  vak.appendChild(knop);
- });
-
- if(antwoordGetoond){
-  const goed=gekozenAntwoord===p[2];
-  el("puzzelFeedback").textContent=
-   (goed?"Goed gedaan! 💚 ":
-    "Het juiste antwoord is: "+p[1][p[2]]+". ")
-   +p[3];
- }else{
-  el("puzzelFeedback").textContent="";
- }
-
- el("toonAntwoord").disabled=antwoordGetoond;
-}
-
-function kiesAntwoord(i){
- if(antwoordGetoond)return;
- gekozenAntwoord=i;
- antwoordGetoond=true;
- toonPuzzel();
-}
-
-function toonPuzzelAntwoord(){
- antwoordGetoond=true;
- toonPuzzel();
-}
-
-el("niveau").addEventListener("change",()=>{
- niveau=el("niveau").value;
- schrijfInstelling("rust_niveau",niveau);
-
- if(puzzelIndex[niveau]<0){
-  volgendePuzzel();
- }else{
-  gekozenAntwoord=null;
-  antwoordGetoond=false;
-  toonPuzzel();
- }
-});
-
-/* HERINNERINGEN */
-let herinneringAan=
- leesInstelling("rust_herinnering","false")==="true";
-
-el("herinnering").checked=herinneringAan;
-
-let actieveTijd=0;
-let laatsteTik=performance.now();
-
-function sluitHerinnering(){
- el("herinneringsKaart").hidden=true;
-}
-
-function openHerinnering(){
- sluitHerinnering();
- openPage("puzzels");
- volgendePuzzel();
-}
-
-el("herinnering").addEventListener("change",()=>{
- herinneringAan=el("herinnering").checked;
-
- schrijfInstelling(
-  "rust_herinnering",
-  String(herinneringAan)
- );
-
- actieveTijd=0;
- laatsteTik=performance.now();
- sluitHerinnering();
-});
-
-setInterval(()=>{
- const nu=performance.now();
- const verschil=Math.min(
-  1000,Math.max(0,nu-laatsteTik)
- );
- laatsteTik=nu;
-
- if(!herinneringAan||
-    document.hidden||
-    !document.hasFocus())return;
-
- actieveTijd+=verschil;
-
- if(actieveTijd>=1800000){
-  actieveTijd=0;
-  el("herinneringsKaart").hidden=false;
- }
-},1000);
-
-/* PAUZEREN BIJ VERLATEN APP */
-document.addEventListener("visibilitychange",()=>{
- laatsteTik=performance.now();
-
- if(document.hidden){
-  sluitHerinnering();
-  if(ademLoopt)startAdem();
-  if(ontspanLoopt)startOntspan();
- }
-});
-
-window.addEventListener("blur",()=>{
- laatsteTik=performance.now();
-});
-
-window.addEventListener("focus",()=>{
- laatsteTik=performance.now();
-});
-
-/* START */
-volgendePuzzel();
-
-</script>
-</body>
-</html>
+   "14:20
