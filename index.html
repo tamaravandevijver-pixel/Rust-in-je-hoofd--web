@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#d8e9dc">
 <title>Rust in je hoofd</title>
 <style>
 *{box-sizing:border-box}
@@ -23,11 +24,7 @@ header{
 h1{font-size:32px;margin:12px 0}
 h2{font-size:24px}
 p{line-height:1.6}
-main{
- max-width:520px;
- margin:auto;
- padding:22px;
-}
+main{max-width:520px;margin:auto;padding:22px}
 .card{
  background:white;
  border-radius:22px;
@@ -48,7 +45,11 @@ button{
  cursor:pointer;
 }
 button:active{background:#4d8169}
-.back{background:#b5c9bd}
+button:focus-visible{
+ outline:3px solid #34584b;
+ outline-offset:3px;
+}
+.back{background:#789a89}
 .page{display:none}
 .page.active{display:block}
 textarea{
@@ -59,22 +60,70 @@ textarea{
  padding:14px;
  font-size:16px;
 }
-.circle{
- width:130px;
- height:130px;
- background:#a4d3b7;
- border-radius:50%;
- margin:35px auto;
- animation:adem 8s infinite ease-in-out;
+footer{text-align:center;padding:25px;color:#739384}
+.center{text-align:center}
+.small{font-size:14px;color:#739384}
+.timer{
+ font-size:36px;
+ font-weight:bold;
+ font-variant-numeric:tabular-nums;
+ margin:15px 0;
 }
-@keyframes adem{
- 0%,100%{transform:scale(.7)}
+.controls{display:flex;gap:10px}
+.controls button{flex:1;min-width:0}
+.circle{
+ width:150px;
+ height:150px;
+ border-radius:50%;
+ background:#a4d3b7;
+ margin:45px auto;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:35px;
+ transform:scale(.75);
+}
+.circle.beweegt{
+ animation:ademhaling 8s infinite ease-in-out;
+}
+@keyframes ademhaling{
+ 0%,100%{transform:scale(.75)}
  50%{transform:scale(1.2)}
 }
-footer{
- text-align:center;
- padding:25px;
- color:#739384;
+#ademTekst{
+ font-size:25px;
+ font-weight:bold;
+ min-height:36px;
+}
+.setting{
+ background:#f3f8f4;
+ border-radius:15px;
+ padding:16px;
+ margin:12px 0;
+}
+.setting label{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ font-size:17px;
+}
+.setting input[type=checkbox]{
+ width:22px;
+ height:22px;
+ accent-color:#548c71;
+}
+.setting input[type=range]{
+ width:100%;
+ accent-color:#548c71;
+ margin-top:12px;
+}
+#ontspanTekst{
+ font-size:20px;
+ line-height:1.65;
+ min-height:125px;
+}
+@media(prefers-reduced-motion:reduce){
+ .circle.beweegt{animation:none}
 }
 </style>
 </head>
@@ -87,13 +136,13 @@ footer{
 </header>
 
 <main>
+
 <div id="home" class="page active">
 <div class="card">
 <h2>Welkom 💚</h2>
-<p>
-Je hoeft even helemaal niets.
-Kies wat jij op dit moment nodig hebt.
-</p>
+<p>Je hoeft even helemaal niets.
+Kies wat jij op dit moment nodig hebt.</p>
+
 <button onclick="openPage('adem')">
 🌬️ Ademhaling
 </button>
@@ -112,44 +161,97 @@ Kies wat jij op dit moment nodig hebt.
 </div>
 </div>
 
+<!-- ADEMHALING -->
 <div id="adem" class="page">
 <div class="card">
 <h2>🌬️ Ademhaling</h2>
 <p>Volg rustig de beweging van de cirkel.</p>
-<div class="circle"></div>
-<p style="text-align:center">
+
+<div id="ademCirkel" class="circle"
+ aria-hidden="true">🌿</div>
+
+<p id="ademTekst" class="center">
+Klaar om te beginnen?
+</p>
+<p class="center small">
 4 seconden inademen<br>
 4 seconden uitademen
 </p>
+
+<div id="ademTimer" class="timer center">02:00</div>
+
+<div class="controls">
+<button id="ademStart" onclick="startAdem()">
+▶ Start
+</button>
+<button onclick="resetAdem()">↻ Opnieuw</button>
+</div>
+
 <button class="back" onclick="openPage('home')">
 ← Terug
 </button>
 </div>
 </div>
 
+<!-- ONTSPANNING -->
 <div id="ontspan" class="page">
 <div class="card">
 <h2>🧘 Ontspanning</h2>
 <p>
-Ga comfortabel zitten.
-Laat je schouders zakken.
-Ontspan je gezicht en je handen.
+Neem vijf minuten voor jezelf.
+Ga comfortabel zitten of liggen.
 </p>
-<p>
-Adem rustig in en uit.
-Voel hoe je lichaam contact maakt
-met de stoel of de grond.
+
+<div class="setting">
+<label>
+<input type="checkbox" id="stemAan">
+🔊 Gesproken begeleiding
+</label>
+<p class="small">
+Standaard uit. De app gebruikt bij voorkeur
+een Nederlandse vrouwenstem als die
+beschikbaar is op je telefoon.
 </p>
-<p>
-Je hoeft nergens naartoe.
-Dit moment is helemaal van jou.
+</div>
+
+<div class="setting">
+<label>
+<input type="checkbox" id="bosAan">
+🐦 Bosgeluiden met vogels
+</label>
+<p class="small">
+Zelf aan- en uitzetten.
 </p>
+<label for="volume">Volume bosgeluiden</label>
+<input type="range" id="volume"
+ min="0" max="100" value="35">
+<p id="bosStatus" class="small"></p>
+</div>
+
+<div class="center">
+<div style="font-size:48px;margin:20px">🌳🐦🌿</div>
+
+<p id="ontspanTekst" aria-live="polite">
+Klaar voor een moment van rust?
+</p>
+
+<div id="ontspanTimer" class="timer">05:00</div>
+</div>
+
+<div class="controls">
+<button id="ontspanStart" onclick="startOntspan()">
+▶ Start
+</button>
+<button onclick="stopOntspan()">⏹ Stop</button>
+</div>
+
 <button class="back" onclick="openPage('home')">
 ← Terug
 </button>
 </div>
 </div>
 
+<!-- SLAAPHULP -->
 <div id="slaap" class="page">
 <div class="card">
 <h2>🌙 Slaaphulp</h2>
@@ -171,12 +273,13 @@ Voor nu mag je uitrusten.
 </div>
 </div>
 
+<!-- DAGBOEK -->
 <div id="dagboek" class="page">
 <div class="card">
 <h2>📖 Mijn dagboek</h2>
 <p>Wat houdt je vandaag bezig?</p>
 <textarea id="tekst"
-placeholder="Schrijf hier je gedachten..."></textarea>
+ placeholder="Schrijf hier je gedachten..."></textarea>
 <button onclick="bewaar()">Bewaren</button>
 <p id="melding"></p>
 <button class="back" onclick="openPage('home')">
@@ -185,6 +288,7 @@ placeholder="Schrijf hier je gedachten..."></textarea>
 </div>
 </div>
 
+<!-- RUSTGEDACHTEN -->
 <div id="gedachten" class="page">
 <div class="card">
 <h2>💚 Rustgedachten</h2>
@@ -199,29 +303,38 @@ Nieuwe rustgedachte
 </button>
 </div>
 </div>
+
 </main>
 
-<footer>
-🌿 Een beetje rust, elke dag
-</footer>
+<footer>🌿 Een beetje rust, elke dag</footer>
+
+<audio id="bosAudio" src="bosgeluiden.mp3"
+ loop preload="none"></audio>
 
 <script>
+/* NAVIGATIE */
 function openPage(id){
+ if(id!=="adem")resetAdem();
+ if(id!=="ontspan")stopOntspan();
+
  document.querySelectorAll(".page")
  .forEach(p=>p.classList.remove("active"));
+
  document.getElementById(id)
  .classList.add("active");
+
  window.scrollTo(0,0);
 }
 
+/* RUSTGEDACHTEN */
 const gedachten=[
-"Je mag het rustig aan doen.",
-"Niet alles hoeft vandaag.",
-"Je bent genoeg zoals je bent.",
-"Elke kleine stap telt.",
-"Rust nemen is geen tijdverspilling.",
-"Je hoeft niet altijd sterk te zijn.",
-"Vandaag mag je kiezen voor jezelf."
+ "Je mag het rustig aan doen.",
+ "Niet alles hoeft vandaag.",
+ "Je bent genoeg zoals je bent.",
+ "Elke kleine stap telt.",
+ "Rust nemen is geen tijdverspilling.",
+ "Je hoeft niet altijd sterk te zijn.",
+ "Vandaag mag je kiezen voor jezelf."
 ];
 
 function nieuweGedachte(){
@@ -230,7 +343,9 @@ function nieuweGedachte(){
  .textContent=gedachten[i];
 }
 
+/* DAGBOEK */
 const veld=document.getElementById("tekst");
+
 try{
  veld.value=localStorage.getItem("dagboek")||"";
 }catch(e){}
@@ -245,6 +360,302 @@ function bewaar(){
   .textContent="Bewaren is niet gelukt.";
  }
 }
+
+/* ADEMHALING */
+let ademOver=120000;
+let ademLoopt=false;
+let ademInterval=null;
+let ademEind=0;
+let ademVerstreken=0;
+
+const ademCirkel=document.getElementById("ademCirkel");
+const ademTekst=document.getElementById("ademTekst");
+const ademTimer=document.getElementById("ademTimer");
+const ademStart=document.getElementById("ademStart");
+
+function tijdTekst(ms){
+ const s=Math.ceil(Math.max(0,ms)/1000);
+ return String(Math.floor(s/60)).padStart(2,"0")
+ +":"+String(s%60).padStart(2,"0");
+}
+
+function toonAdem(){
+ ademTimer.textContent=tijdTekst(ademOver);
+}
+
+function updateAdem(){
+ if(!ademLoopt)return;
+
+ ademOver=Math.max(0,ademEind-performance.now());
+ toonAdem();
+
+ const voorbij=120000-ademOver;
+ ademTekst.textContent=
+ Math.floor(voorbij/4000)%2===0
+ ?"Adem rustig in 🌿"
+ :"Adem rustig uit 🍃";
+
+ if(ademOver<=0){
+  clearInterval(ademInterval);
+  ademInterval=null;
+  ademLoopt=false;
+  ademCirkel.classList.remove("beweegt");
+  ademTekst.textContent="Goed gedaan! 💚";
+  ademStart.textContent="▶ Opnieuw starten";
+ }
+}
+
+function startAdem(){
+ if(ademLoopt){
+  ademOver=Math.max(0,ademEind-performance.now());
+  ademVerstreken=120000-ademOver;
+  ademLoopt=false;
+  clearInterval(ademInterval);
+  ademInterval=null;
+  ademCirkel.style.animationPlayState="paused";
+  ademStart.textContent="▶ Verder";
+  ademTekst.textContent="Even pauze 💚";
+  toonAdem();
+  return;
+ }
+
+ if(ademOver<=0)resetAdem();
+
+ ademLoopt=true;
+ ademEind=performance.now()+ademOver;
+ ademCirkel.classList.add("beweegt");
+ ademCirkel.style.animationDelay=
+ (-ademVerstreken/1000)+"s";
+ ademCirkel.style.animationPlayState="running";
+ ademStart.textContent="⏸ Pauze";
+
+ ademInterval=setInterval(updateAdem,100);
+ updateAdem();
+}
+
+function resetAdem(){
+ ademLoopt=false;
+ clearInterval(ademInterval);
+ ademInterval=null;
+ ademOver=120000;
+ ademVerstreken=0;
+ ademCirkel.classList.remove("beweegt");
+ ademCirkel.style.animationPlayState="paused";
+ ademCirkel.style.animationDelay="0s";
+ ademTekst.textContent="Klaar om te beginnen?";
+ ademStart.textContent="▶ Start";
+ toonAdem();
+}
+
+/* ONTSPANNING */
+const stemAan=document.getElementById("stemAan");
+const bosAan=document.getElementById("bosAan");
+const bosAudio=document.getElementById("bosAudio");
+const volume=document.getElementById("volume");
+const bosStatus=document.getElementById("bosStatus");
+const ontspanTekst=document.getElementById("ontspanTekst");
+const ontspanTimer=document.getElementById("ontspanTimer");
+const ontspanStart=document.getElementById("ontspanStart");
+
+let ontspanLoopt=false;
+let ontspanOver=300000;
+let ontspanEind=0;
+let ontspanInterval=null;
+let laatsteStap=-1;
+
+const oefening=[
+ "Ga rustig zitten of liggen. Voel hoe je lichaam wordt gedragen.",
+ "Laat je schouders langzaam zakken. Je hoeft niets vast te houden.",
+ "Ontspan je voorhoofd, je ogen en je kaken.",
+ "Adem rustig in en laat de lucht vanzelf weer naar buiten gaan.",
+ "Voel hoe je handen ontspannen. Laat je vingers zacht rusten.",
+ "Breng je aandacht naar je armen. Ze mogen zwaar worden.",
+ "Ontspan je buik. Je hoeft je ademhaling niet te sturen.",
+ "Voel hoe je rug contact maakt met de stoel of de ondergrond.",
+ "Laat je benen ontspannen, van je bovenbenen tot je knieën.",
+ "Ontspan je voeten en je tenen. Voel de rust in je lichaam.",
+ "Blijf nog even rustig zitten of liggen. Er hoeft nu niets."
+];
+
+function kiesStem(){
+ if(!("speechSynthesis" in window))return null;
+
+ const stemmen=speechSynthesis.getVoices();
+ const nederlands=stemmen.filter(v=>
+  v.lang.toLowerCase().startsWith("nl")
+ );
+
+ return nederlands.find(v=>
+  /female|vrouw|femke|claire|lotte|xanderin/i.test(v.name)
+ )||nederlands[0]||null;
+}
+
+function spreek(tekst){
+ if(!stemAan.checked)return;
+ if(!("speechSynthesis" in window))return;
+
+ speechSynthesis.cancel();
+
+ const zin=new SpeechSynthesisUtterance(tekst);
+ zin.lang="nl-NL";
+ zin.rate=0.85;
+ zin.pitch=1;
+ zin.volume=0.9;
+
+ const stem=kiesStem();
+ if(stem)zin.voice=stem;
+
+ speechSynthesis.speak(zin);
+}
+
+function stopStem(){
+ if("speechSynthesis" in window){
+  speechSynthesis.cancel();
+ }
+}
+
+function speelBos(){
+ if(!bosAan.checked || !ontspanLoopt)return;
+
+ bosAudio.volume=Number(volume.value)/100;
+
+ bosAudio.play().then(()=>{
+  bosStatus.textContent="";
+ }).catch(()=>{
+  bosStatus.textContent=
+  "Bosgeluiden zijn nog niet beschikbaar. Voeg bosgeluiden.mp3 toe aan GitHub.";
+ });
+}
+
+function stopBos(){
+ bosAudio.pause();
+}
+
+bosAan.addEventListener("change",()=>{
+ if(bosAan.checked){
+  speelBos();
+ }else{
+  stopBos();
+  bosStatus.textContent="";
+ }
+});
+
+volume.addEventListener("input",()=>{
+ bosAudio.volume=Number(volume.value)/100;
+});
+
+stemAan.addEventListener("change",()=>{
+ if(!stemAan.checked){
+  stopStem();
+ }else if(ontspanLoopt){
+  spreek(ontspanTekst.textContent);
+ }
+});
+
+function toonOntspanTimer(){
+ ontspanTimer.textContent=tijdTekst(ontspanOver);
+}
+
+function updateOntspan(){
+ if(!ontspanLoopt)return;
+
+ ontspanOver=Math.max(
+  0,ontspanEind-performance.now()
+ );
+ toonOntspanTimer();
+
+ if(ontspanOver<=0){
+  clearInterval(ontspanInterval);
+  ontspanInterval=null;
+  ontspanLoopt=false;
+  stopBos();
+  stopStem();
+  ontspanTekst.textContent=
+   "De oefening is afgelopen. Neem rustig de tijd om terug te komen. 💚";
+  ontspanStart.textContent="▶ Opnieuw";
+  if(stemAan.checked){
+   spreek("De oefening is afgelopen. Neem rustig de tijd om terug te komen.");
+  }
+  return;
+ }
+
+ const verstreken=300000-ontspanOver;
+ const stap=Math.min(
+  oefening.length-1,
+  Math.floor(verstreken/30000)
+ );
+
+ if(stap!==laatsteStap){
+  laatsteStap=stap;
+  ontspanTekst.textContent=oefening[stap];
+  spreek(oefening[stap]);
+ }
+}
+
+function startOntspan(){
+ if(ontspanLoopt){
+  ontspanOver=Math.max(
+   0,ontspanEind-performance.now()
+  );
+  ontspanLoopt=false;
+  clearInterval(ontspanInterval);
+  ontspanInterval=null;
+  stopBos();
+  stopStem();
+  ontspanStart.textContent="▶ Verder";
+  return;
+ }
+
+ if(ontspanOver<=0){
+  ontspanOver=300000;
+  laatsteStap=-1;
+ }
+
+ ontspanLoopt=true;
+ ontspanEind=performance.now()+ontspanOver;
+ ontspanStart.textContent="⏸ Pauze";
+
+ if(bosAan.checked)speelBos();
+
+ ontspanInterval=setInterval(updateOntspan,200);
+ updateOntspan();
+
+ if(stemAan.checked && laatsteStap>=0){
+  spreek(ontspanTekst.textContent);
+ }
+}
+
+function stopOntspan(){
+ ontspanLoopt=false;
+ clearInterval(ontspanInterval);
+ ontspanInterval=null;
+ ontspanOver=300000;
+ laatsteStap=-1;
+ stopBos();
+ bosAudio.currentTime=0;
+ stopStem();
+ ontspanTekst.textContent=
+  "Klaar voor een moment van rust?";
+ ontspanStart.textContent="▶ Start";
+ toonOntspanTimer();
+}
+
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden){
+  if(ademLoopt)startAdem();
+  if(ontspanLoopt)startOntspan();
+ }
+});
+
+bosAudio.addEventListener("error",()=>{
+ if(bosAan.checked){
+  bosStatus.textContent=
+   "Het bestand bosgeluiden.mp3 ontbreekt of kan niet worden afgespeeld.";
+ }
+});
+
+toonAdem();
+toonOntspanTimer();
 </script>
 </body>
 </html>
