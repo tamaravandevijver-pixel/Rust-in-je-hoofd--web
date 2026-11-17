@@ -1,376 +1,143 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#d8e9dc">
+<meta name="theme-color" content="#d9eadf">
 <title>Rust in je hoofd</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#f5f2e9;
- color:#34584b;
-}
-header{
- padding:42px 22px 32px;
- text-align:center;
- background:#d8e9dc;
- border-radius:0 0 35px 35px;
-}
-.logo{font-size:55px}
-h1{font-size:32px;margin:12px 0}
-h2{font-size:23px}
-p{line-height:1.6}
-main{max-width:520px;margin:auto;padding:20px}
-.card{
- background:white;
- border-radius:22px;
- padding:22px;
- margin-bottom:18px;
- box-shadow:0 4px 18px #234a3612;
-}
-button{
- width:100%;
- padding:15px;
- margin:7px 0;
- border:0;
- border-radius:14px;
- background:#79aa91;
- color:white;
- font-size:16px;
- font-weight:bold;
- cursor:pointer;
- touch-action:manipulation;
-}
-button:disabled{opacity:.55;cursor:default}
-button:focus-visible{
- outline:3px solid #34584b;
- outline-offset:2px;
-}
-.back{background:#789a89}
+body{margin:0;background:#f6f3ea;color:#355b4b;font-family:Arial,sans-serif}
+header{text-align:center;background:#d9eadf;padding:30px 15px;border-radius:0 0 30px 30px}
+h1{margin:8px}
+main{max-width:560px;margin:auto;padding:16px}
 .page{display:none}
 .page.active{display:block}
+.card{background:white;border-radius:20px;padding:20px;margin:12px 0;box-shadow:0 3px 15px #34584b15}
+button{border:0;border-radius:12px;padding:13px;background:#77a88d;color:white;font-weight:bold;font-size:16px;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.5}
+.wide{width:100%;margin:6px 0}
+.back{background:#789487}
+.muted{color:#6e8a7a;font-size:14px}
+p{line-height:1.55}
+textarea,select{width:100%;padding:12px;border:1px solid #9cbca9;border-radius:10px;font:inherit}
+textarea{height:160px}
+.setting{padding:14px;background:#f0f7f2;border-radius:12px;margin:12px 0}
+.setting label{display:flex;gap:10px;align-items:center}
+.setting input[type=checkbox]{width:21px;height:21px;accent-color:#51886c}
+.setting input[type=range]{width:100%}
 .center{text-align:center}
-.small{font-size:14px;color:#739384}
-.timer{
- font-size:34px;
- font-weight:bold;
- font-variant-numeric:tabular-nums;
- margin:15px 0;
+.timer{font-size:32px;font-weight:bold}
+.row{display:flex;gap:8px}
+.row button{flex:1;min-width:0}
+.circle{height:145px;width:145px;margin:35px auto;border-radius:50%;display:grid;place-items:center;background:#a5d3b6;font-size:35px;transform:scale(.8)}
+.circle.running{animation:breathe 8s infinite ease-in-out}
+@keyframes breathe{
+0%,100%{transform:scale(.8)}
+50%{transform:scale(1.18)}
 }
-.controls{display:flex;gap:8px}
-.controls button{flex:1;min-width:0}
-textarea{
- width:100%;
- min-height:150px;
- border:1px solid #b5c9bd;
- border-radius:12px;
- padding:14px;
- font-size:16px;
-}
-select{
- width:100%;
- padding:13px;
- border:1px solid #9ab7a5;
- border-radius:12px;
- background:white;
- color:#34584b;
- font-size:17px;
-}
-.setting{
- background:#f3f8f4;
- border-radius:15px;
- padding:15px;
- margin:12px 0;
-}
-.setting label{
- display:flex;
- align-items:center;
- gap:10px;
-}
-.setting input[type=checkbox]{
- width:22px;
- height:22px;
- accent-color:#548c71;
-}
-.setting input[type=range]{
- width:100%;
- accent-color:#548c71;
-}
-.circle{
- width:150px;
- height:150px;
- border-radius:50%;
- background:#a4d3b7;
- margin:45px auto;
- display:flex;
- align-items:center;
- justify-content:center;
- font-size:35px;
- transform:scale(.75);
-}
-.circle.beweegt{
- animation:ademhaling 8s infinite ease-in-out;
-}
-@keyframes ademhaling{
- 0%,100%{transform:scale(.75)}
- 50%{transform:scale(1.2)}
-}
-#ademTekst{font-size:24px;font-weight:bold}
-#ontspanTekst{font-size:20px;min-height:125px}
-footer{
- text-align:center;
- padding:25px;
- color:#739384;
-}
-.choice{
- background:#edf5ef;
- color:#34584b;
- text-align:left;
- font-weight:normal;
-}
-.choice.selected{
- outline:2px solid #34584b;
-}
-.feedback{
- font-weight:bold;
- min-height:25px;
-}
-.game-tabs{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:8px;
- margin:16px 0;
-}
-.game-tabs button{margin:0;font-size:14px}
-.game-tabs button.active{
- background:#34584b;
-}
-.game-panel{display:none}
-.game-panel.active{display:block}
-.game-status{
- text-align:center;
- min-height:30px;
- font-weight:bold;
- margin:12px 0;
-}
-.memory-grid{
- display:grid;
- gap:8px;
- margin:15px auto;
- max-width:350px;
-}
-.memory-card{
- aspect-ratio:1;
- margin:0;
- padding:0;
- background:#c9dfd1;
- color:#34584b;
- font-size:30px;
- border-radius:12px;
-}
-.memory-card.open{
- background:#f0f8f2;
-}
-.memory-card.matched{
- background:#d5ead9;
-}
-.word-grid{
- display:grid;
- gap:3px;
- margin:16px auto;
- width:100%;
- max-width:380px;
-}
-.word-cell{
- aspect-ratio:1;
- min-width:0;
- padding:0;
- margin:0;
- border-radius:5px;
- background:#e8f1eb;
- color:#34584b;
- font-size:clamp(10px,3.2vw,17px);
-}
-.word-cell.picked{background:#83b99b}
-.word-cell.found{
- background:#4f8e6d;
- color:white;
-}
-.word-list{
- display:flex;
- flex-wrap:wrap;
- gap:8px;
-}
-.word-tag{
- padding:7px 10px;
- background:#edf5ef;
- border-radius:9px;
- font-size:14px;
-}
-.word-tag.done{
- text-decoration:line-through;
- color:#739384;
-}
-.slide-grid{
- display:grid;
- gap:5px;
- margin:15px auto;
- max-width:350px;
-}
-.slide-tile{
- aspect-ratio:1;
- margin:0;
- padding:0;
- border-radius:10px;
- font-size:24px;
- background:#a4d3b7;
- color:#34584b;
-}
-.slide-tile.empty{
- background:#f0f5f1;
-}
-.sequence-grid{
- display:grid;
- grid-template-columns:repeat(2,1fr);
- gap:12px;
- max-width:300px;
- margin:20px auto;
-}
-.sequence-pad{
- aspect-ratio:1;
- border-radius:18px;
- opacity:.7;
- margin:0;
- border:3px solid transparent;
-}
-.sequence-pad.lit{
- opacity:1;
- border-color:#34584b;
- transform:scale(1.04);
-}
-.sequence-pad:disabled{opacity:.7}
-.reminder{
- position:fixed;
- bottom:12px;
- left:12px;
- right:12px;
- max-width:490px;
- margin:auto;
- background:white;
- border:2px solid #79aa91;
- border-radius:18px;
- padding:16px;
- box-shadow:0 5px 25px #234a3640;
- z-index:10;
-}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.tabs button{font-size:14px}
+.tabs .selected{background:#355b4b}
+.game{display:none;margin-top:18px}
+.game.active{display:block}
+.status{min-height:28px;font-weight:bold;text-align:center}
+.memory,.slide,.wordgrid{display:grid;gap:5px;margin:15px auto;max-width:390px}
+.memory button,.slide button,.wordgrid button{aspect-ratio:1;padding:0;min-width:0;color:#355b4b;background:#d5e8da}
+.memory button{font-size:clamp(20px,6vw,35px)}
+.memory .revealed{background:#eef7f0}
+.memory .matched{background:#b2d9bf}
+.slide button{font-size:23px}
+.slide .empty{background:#f1f5f1}
+.wordgrid{gap:2px}
+.wordgrid button{font-size:clamp(10px,3.3vw,17px);border-radius:5px}
+.wordgrid .chosen{background:#edce8c}
+.wordgrid .found{background:#5c9974;color:white}
+.words{display:flex;gap:7px;flex-wrap:wrap}
+.words span{padding:7px;background:#edf4ee;border-radius:8px}
+.words .done{text-decoration:line-through;opacity:.5}
+.pads{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:290px;margin:20px auto}
+.pads button{aspect-ratio:1;opacity:.7;border:4px solid transparent}
+.pads button.lit{opacity:1;border-color:#355b4b;transform:scale(1.04)}
+.answer{background:#eaf4ed;color:#355b4b;width:100%;margin:5px 0;text-align:left}
+.reminder{position:fixed;bottom:12px;left:12px;right:12px;max-width:500px;margin:auto;background:white;padding:18px;border:2px solid #77a88d;border-radius:18px;box-shadow:0 5px 20px #0003;z-index:5}
 .reminder[hidden]{display:none}
+footer{text-align:center;padding:22px;color:#789487}
 @media(prefers-reduced-motion:reduce){
- .circle.beweegt{animation:none}
+.circle.running{animation:none}
 }
 </style>
 </head>
 <body>
 
 <header>
-<div class="logo">🌿</div>
+<div style="font-size:48px">🌿</div>
 <h1>Rust in je hoofd</h1>
 <p>Een moment van rust, speciaal voor jou</p>
 </header>
 
 <main>
-
 <section id="home" class="page active">
 <div class="card">
 <h2>Welkom 💚</h2>
-<p>Je hoeft even helemaal niets.
-Kies wat jij op dit moment nodig hebt.</p>
-<button onclick="openPage('adem')">🌬️ Ademhaling</button>
-<button onclick="openPage('ontspan')">🧘 Ontspanning</button>
-<button onclick="openPage('slaap')">🌙 Slaaphulp</button>
-<button onclick="openPage('dagboek')">📖 Mijn dagboek</button>
-<button onclick="openPage('gedachten')">💚 Rustgedachten</button>
-<button onclick="openPage('puzzels')">🧩 Even uit je hoofd</button>
+<p>Je hoeft even helemaal niets. Kies wat jij nodig hebt.</p>
+<button class="wide" data-page="adem">🌬️ Ademhaling</button>
+<button class="wide" data-page="ontspan">🧘 Ontspanning</button>
+<button class="wide" data-page="slaap">🌙 Slaaphulp</button>
+<button class="wide" data-page="dagboek">📖 Mijn dagboek</button>
+<button class="wide" data-page="gedachten">💚 Rustgedachten</button>
+<button class="wide" data-page="puzzels">🧩 Even uit je hoofd</button>
 </div>
 </section>
 
 <section id="adem" class="page">
 <div class="card">
 <h2>🌬️ Ademhaling</h2>
-<p>Volg rustig de beweging van de cirkel.</p>
-<div id="ademCirkel" class="circle">🌿</div>
-<p id="ademTekst" class="center">Klaar om te beginnen?</p>
-<p class="center small">
-4 seconden inademen<br>4 seconden uitademen
-</p>
-<div id="ademTimer" class="timer center">02:00</div>
-<div class="controls">
-<button id="ademStart" onclick="startAdem()">▶ Start</button>
-<button onclick="resetAdem()">↻ Opnieuw</button>
+<p>Volg de cirkel. Adem vier seconden in en vier seconden uit.</p>
+<div id="circle" class="circle">🌿</div>
+<p id="breathText" class="center">Klaar om te beginnen?</p>
+<div id="breathTime" class="timer center">02:00</div>
+<div class="row">
+<button id="breathButton">▶ Start</button>
+<button id="breathReset">↻ Opnieuw</button>
 </div>
-<button class="back" onclick="openPage('home')">← Terug</button>
+<button class="wide back" data-page="home">← Terug</button>
 </div>
 </section>
 
 <section id="ontspan" class="page">
 <div class="card">
 <h2>🧘 Ontspanning</h2>
-<p>Neem vijf minuten voor jezelf.
-Ga comfortabel zitten of liggen.</p>
-
+<p>Neem vijf minuten voor jezelf.</p>
 <div class="setting">
-<label>
-<input type="checkbox" id="stemAan">
-🔊 Gesproken begeleiding
-</label>
-<p class="small">
-Standaard uit. De app kiest bij voorkeur
-een Nederlandse vrouwenstem als die beschikbaar is.
-</p>
+<label><input id="voiceOn" type="checkbox"> 🔊 Gesproken begeleiding</label>
+<p class="muted">Optioneel. Een beschikbare Nederlandse stem wordt gebruikt; een vrouwenstem heeft de voorkeur.</p>
 </div>
-
 <div class="setting">
-<label>
-<input type="checkbox" id="bosAan">
-🐦 Bosgeluiden met vogels
-</label>
-<p class="small">
-Werkt zodra je later bosgeluiden.mp3 toevoegt.
-</p>
-<label for="volume">Volume bosgeluiden</label>
-<input type="range" id="volume"
- min="0" max="100" value="35">
-<p id="bosStatus" class="small"></p>
+<label><input id="forestOn" type="checkbox"> 🐦 Bosgeluiden</label>
+<p class="muted">Hiervoor kun je later het bestand bosgeluiden.mp3 toevoegen.</p>
+<label for="forestVolume">Volume</label>
+<input id="forestVolume" type="range" min="0" max="100" value="35">
+<p id="forestMessage" class="muted"></p>
 </div>
-
-<div class="center">
-<div style="font-size:48px;margin:20px">🌳🐦🌿</div>
-<p id="ontspanTekst">
-Klaar voor een moment van rust?
-</p>
-<div id="ontspanTimer" class="timer">05:00</div>
+<p id="relaxText" class="center" style="min-height:100px;font-size:19px">Klaar voor een moment van rust?</p>
+<div id="relaxTime" class="timer center">05:00</div>
+<div class="row">
+<button id="relaxButton">▶ Start</button>
+<button id="relaxReset">⏹ Stop</button>
 </div>
-<div class="controls">
-<button id="ontspanStart" onclick="startOntspan()">▶ Start</button>
-<button onclick="stopOntspan()">⏹ Stop</button>
-</div>
-<button class="back" onclick="openPage('home')">← Terug</button>
+<button class="wide back" data-page="home">← Terug</button>
 </div>
 </section>
 
 <section id="slaap" class="page">
 <div class="card">
 <h2>🌙 Slaaphulp</h2>
-<p>Laat de gebeurtenissen van vandaag los.
-Je hoeft nu niets meer op te lossen.</p>
-<p>Sluit je ogen als dat prettig voelt.
-Adem langzaam en ontspan je lichaam.</p>
-<p>Morgen is er weer een nieuwe dag.
-Voor nu mag je uitrusten.</p>
-<button class="back" onclick="openPage('home')">← Terug</button>
+<p>Laat de gebeurtenissen van vandaag los. Je hoeft nu niets meer op te lossen.</p>
+<p>Sluit je ogen als dat prettig voelt. Adem langzaam en ontspan je lichaam.</p>
+<p>Morgen is er weer een nieuwe dag. Voor nu mag je uitrusten.</p>
+<button class="wide back" data-page="home">← Terug</button>
 </div>
 </section>
 
@@ -378,199 +145,193 @@ Voor nu mag je uitrusten.</p>
 <div class="card">
 <h2>📖 Mijn dagboek</h2>
 <p>Wat houdt je vandaag bezig?</p>
-<textarea id="tekst"
- placeholder="Schrijf hier je gedachten..."></textarea>
-<button onclick="bewaar()">Bewaren</button>
-<p id="melding"></p>
-<button class="back" onclick="openPage('home')">← Terug</button>
+<textarea id="diary" placeholder="Schrijf hier je gedachten..."></textarea>
+<button id="saveDiary" class="wide">Bewaren</button>
+<p id="diaryStatus" role="status"></p>
+<button class="wide back" data-page="home">← Terug</button>
 </div>
 </section>
 
 <section id="gedachten" class="page">
 <div class="card">
 <h2>💚 Rustgedachten</h2>
-<p id="gedachte">Je mag het rustig aan doen.</p>
-<button onclick="nieuweGedachte()">Nieuwe rustgedachte</button>
-<button class="back" onclick="openPage('home')">← Terug</button>
+<p id="thought">Je mag het rustig aan doen.</p>
+<button id="newThought" class="wide">Nieuwe rustgedachte</button>
+<button class="wide back" data-page="home">← Terug</button>
 </div>
 </section>
 
 <section id="puzzels" class="page">
 <div class="card">
 <h2>🧩 Even uit je hoofd</h2>
-<p>
-Kies een kleine uitdaging om je aandacht
-even ergens anders op te richten.
-Je speelt zonder tijdsdruk.
-</p>
+<p>Speel in je eigen tempo. Niets hoeft perfect.</p>
 
 <div class="setting">
-<label for="niveau">Moeilijkheidsgraad</label>
-<select id="niveau">
+<label for="level">Moeilijkheidsgraad</label>
+<select id="level">
 <option value="makkelijk">🌱 Makkelijk</option>
-<option value="gemiddeld" selected>🌿 Gemiddeld</option>
+<option value="gemiddeld">🌿 Gemiddeld</option>
 <option value="moeilijk">🌳 Moeilijk</option>
 </select>
-<p class="small">Je keuze wordt onthouden.</p>
 </div>
 
 <div class="setting">
 <label>
-<input type="checkbox" id="herinnering">
+<input type="checkbox" id="remindOn">
 🔔 Herinner mij iedere 30 minuten
 </label>
-<p class="small">
-Standaard uit. Werkt zolang deze app
-open en actief is.
-</p>
+<p class="muted">Alleen zolang de app open en actief is. Geen meldingen als de app gesloten is.</p>
 </div>
 
-<div class="game-tabs">
-<button id="tab-vragen" onclick="toonSpel('vragen')">
-💡 Hersenkrakers
-</button>
-<button id="tab-memory" onclick="toonSpel('memory')">
-🃏 Memory
-</button>
-<button id="tab-woorden" onclick="toonSpel('woorden')">
-🔤 Woordzoeker
-</button>
-<button id="tab-schuiven" onclick="toonSpel('schuiven')">
-🔢 Schuifpuzzel
-</button>
-<button id="tab-reeks" onclick="toonSpel('reeks')">
-🎨 Geheugenspel
-</button>
+<div class="tabs">
+<button data-game="vragen">💡 Hersenkrakers</button>
+<button data-game="memory">🃏 Memory</button>
+<button data-game="woorden">🔤 Woordzoeker</button>
+<button data-game="schuiven">🔢 Schuifpuzzel</button>
+<button data-game="reeks">🎨 Geheugenspel</button>
 </div>
 
-<div id="game-vragen" class="game-panel">
-<p class="small">Kies het juiste antwoord.</p>
-<h2 id="puzzelVraag"></h2>
-<div id="puzzelOpties"></div>
-<p id="puzzelFeedback" class="feedback" role="status"></p>
-<button id="toonAntwoord" onclick="toonPuzzelAntwoord()">
-💡 Toon antwoord
-</button>
-<button onclick="volgendePuzzel()">🔄 Volgende vraag</button>
+<div id="game-vragen" class="game">
+<h3 id="question"></h3>
+<div id="answers"></div>
+<p id="questionStatus" class="status" role="status"></p>
+<button id="showAnswer" class="wide">💡 Toon antwoord</button>
+<button id="nextQuestion" class="wide">🔄 Volgende vraag</button>
 </div>
 
-<div id="game-memory" class="game-panel">
-<h2>🃏 Memory</h2>
-<p>Draai twee kaartjes om en zoek dezelfde plaatjes.</p>
-<div id="memoryStatus" class="game-status" role="status"></div>
-<div id="memoryGrid" class="memory-grid"></div>
-<button onclick="nieuwMemory()">🔄 Nieuw spel</button>
+<div id="game-memory" class="game">
+<h3>🃏 Memory</h3>
+<p>Zoek twee dezelfde kaartjes.</p>
+<p id="memoryStatus" class="status" role="status"></p>
+<div id="memoryGrid" class="memory"></div>
+<button id="newMemory" class="wide">🔄 Nieuw spel</button>
 </div>
 
-<div id="game-woorden" class="game-panel">
-<h2>🔤 Woordzoeker</h2>
-<p>
-Tik de eerste en daarna de laatste letter
-van een woord aan. Woorden kunnen ook
-achterstevoren staan.
-</p>
-<div id="woordStatus" class="game-status" role="status"></div>
-<div id="woordLijst" class="word-list"></div>
-<div id="woordGrid" class="word-grid"></div>
-<button onclick="nieuwWoordspel()">🔄 Nieuwe woordzoeker</button>
+<div id="game-woorden" class="game">
+<h3>🔤 Woordzoeker</h3>
+<p>Tik op de eerste en laatste letter van een woord. Ook achterstevoren!</p>
+<p id="wordStatus" class="status" role="status"></p>
+<div id="wordList" class="words"></div>
+<div id="wordGrid" class="wordgrid"></div>
+<button id="newWords" class="wide">🔄 Nieuwe woordzoeker</button>
 </div>
 
-<div id="game-schuiven" class="game-panel">
-<h2>🔢 Schuifpuzzel</h2>
-<p>
-Tik op een vakje naast het lege vak
-om het te verschuiven. Zet alle cijfers
-in de juiste volgorde.
-</p>
-<div id="schuifStatus" class="game-status" role="status"></div>
-<div id="schuifGrid" class="slide-grid"></div>
-<button onclick="nieuwSchuifspel()">🔄 Nieuwe puzzel</button>
+<div id="game-schuiven" class="game">
+<h3>🔢 Schuifpuzzel</h3>
+<p>Tik op een cijfer naast het lege vakje. Zet de cijfers op volgorde.</p>
+<p id="slideStatus" class="status" role="status"></p>
+<div id="slideGrid" class="slide"></div>
+<button id="newSlide" class="wide">🔄 Nieuwe puzzel</button>
 </div>
 
-<div id="game-reeks" class="game-panel">
-<h2>🎨 Geheugenspel</h2>
-<p>
-Kijk naar de oplichtende kleuren.
-Tik ze daarna in dezelfde volgorde aan.
-</p>
-<div id="reeksStatus" class="game-status" role="status"></div>
-<div id="reeksGrid" class="sequence-grid">
-<button class="sequence-pad" style="background:#ed9b9b"
- onclick="kiesKleur(0)" aria-label="Rood"></button>
-<button class="sequence-pad" style="background:#92b9e3"
- onclick="kiesKleur(1)" aria-label="Blauw"></button>
-<button class="sequence-pad" style="background:#e8cc79"
- onclick="kiesKleur(2)" aria-label="Geel"></button>
-<button class="sequence-pad" style="background:#90cba4"
- onclick="kiesKleur(3)" aria-label="Groen"></button>
+<div id="game-reeks" class="game">
+<h3>🎨 Geheugenspel</h3>
+<p>Onthoud de oplichtende kleuren en tik ze na.</p>
+<p id="sequenceStatus" class="status" role="status"></p>
+<div id="pads" class="pads">
+<button data-color="0" style="background:#e99b9b" aria-label="Rood"></button>
+<button data-color="1" style="background:#92b9e3" aria-label="Blauw"></button>
+<button data-color="2" style="background:#e8ce79" aria-label="Geel"></button>
+<button data-color="3" style="background:#90cba4" aria-label="Groen"></button>
 </div>
-<button onclick="nieuwReeksspel()">▶ Nieuwe reeks</button>
+<button id="newSequence" class="wide">▶ Nieuwe reeks</button>
+<button id="repeatSequence" class="wide back">↻ Reeks opnieuw bekijken</button>
 </div>
 
-<button class="back" onclick="openPage('home')">← Terug</button>
+<button class="wide back" data-page="home">← Terug</button>
 </div>
 </section>
-
 </main>
 
 <footer>🌿 Een beetje rust, elke dag</footer>
 
-<div id="herinneringsKaart" class="reminder" hidden>
+<div id="reminder" class="reminder" hidden>
 <strong>🧩 Even uit je hoofd?</strong>
-<p>Tijd voor een kleine uitdaging!
-Je mag ook gewoon verdergaan.</p>
-<div class="controls">
-<button onclick="openHerinnering()">Bekijk spel</button>
-<button class="back" onclick="sluitHerinnering()">Niet nu</button>
+<p>Een kleine puzzel kan helpen om je aandacht te verleggen.</p>
+<div class="row">
+<button id="reminderPlay">Bekijk spel</button>
+<button id="reminderClose" class="back">Niet nu</button>
 </div>
 </div>
 
-<audio id="bosAudio"
- src="bosgeluiden.mp3" loop preload="none"></audio>
+<audio id="forestAudio" src="bosgeluiden.mp3" loop preload="none"></audio>
 
 <script>
-const el=id=>document.getElementById(id);
+"use strict";
 
-function lees(s,d){
- try{
-  const v=localStorage.getItem(s);
-  return v===null?d:v;
- }catch(e){return d}
-}
-function schrijf(s,v){
- try{localStorage.setItem(s,v)}catch(e){}
-}
-function tijd(ms){
- const s=Math.ceil(Math.max(0,ms)/1000);
- return String(Math.floor(s/60)).padStart(2,"0")
- +":"+String(s%60).padStart(2,"0");
-}
-function willekeurig(n){
- return Math.floor(Math.random()*n);
-}
-function schud(a){
- const b=[...a];
- for(let i=b.length-1;i>0;i--){
-  const j=willekeurig(i+1);
-  [b[i],b[j]]=[b[j],b[i]];
+const $ = id => document.getElementById(id);
+const rand = n => Math.floor(Math.random()*n);
+
+function shuffle(array){
+ const a=[...array];
+ for(let i=a.length-1;i>0;i--){
+  const j=rand(i+1);
+  [a[i],a[j]]=[a[j],a[i]];
  }
- return b;
+ return a;
+}
+
+function read(key,defaultValue){
+ try{
+  const value=localStorage.getItem(key);
+  return value===null?defaultValue:value;
+ }catch(error){
+  return defaultValue;
+ }
+}
+
+function save(key,value){
+ try{
+  localStorage.setItem(key,value);
+  return true;
+ }catch(error){
+  return false;
+ }
+}
+
+function fmt(ms){
+ const seconds=Math.ceil(Math.max(0,ms)/1000);
+ return String(Math.floor(seconds/60)).padStart(2,"0")
+  +":"+String(seconds%60).padStart(2,"0");
 }
 
 /* NAVIGATIE */
-function openPage(id){
- if(id!=="adem")resetAdem();
- if(id!=="ontspan")stopOntspan();
- if(id!=="puzzels")stopReeks();
- sluitHerinnering();
- document.querySelectorAll(".page")
-  .forEach(p=>p.classList.remove("active"));
- el(id).classList.add("active");
+
+let currentGame="vragen";
+
+function page(id){
+ if(id!=="adem")resetBreath();
+ if(id!=="ontspan")resetRelax();
+ if(id!=="puzzels")stopSequence();
+
+ document.querySelectorAll(".page").forEach(section=>{
+  section.classList.toggle("active",section.id===id);
+ });
+
+ $("reminder").hidden=true;
  window.scrollTo(0,0);
 }
 
+document.querySelectorAll("[data-page]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  page(button.dataset.page);
+ });
+});
+
+/* DAGBOEK */
+
+$("diary").value=read("dagboek","");
+
+$("saveDiary").addEventListener("click",()=>{
+ const ok=save("dagboek",$("diary").value);
+ $("diaryStatus").textContent=ok
+  ?"Je gedachten zijn bewaard. 💚"
+  :"Bewaren is niet gelukt.";
+});
+
 /* RUSTGEDACHTEN */
-const gedachten=[
+
+const thoughts=[
  "Je mag het rustig aan doen.",
  "Niet alles hoeft vandaag.",
  "Je bent genoeg zoals je bent.",
@@ -579,262 +340,370 @@ const gedachten=[
  "Je hoeft niet altijd sterk te zijn.",
  "Vandaag mag je kiezen voor jezelf."
 ];
-function nieuweGedachte(){
- el("gedachte").textContent=
- gedachten[willekeurig(gedachten.length)];
-}
 
-/* DAGBOEK */
-const veld=el("tekst");
-veld.value=lees("dagboek","");
-function bewaar(){
- try{
-  localStorage.setItem("dagboek",veld.value);
-  el("melding").textContent=
-   "Je gedachten zijn bewaard.";
- }catch(e){
-  el("melding").textContent=
-   "Bewaren is niet gelukt.";
- }
-}
+$("newThought").addEventListener("click",()=>{
+ $("thought").textContent=thoughts[rand(thoughts.length)];
+});
 
 /* ADEMHALING */
-let ademOver=120000;
-let ademLoopt=false;
-let ademInterval=null;
-let ademEind=0;
-let ademVerstreken=0;
 
-function updateAdem(){
- if(!ademLoopt)return;
- ademOver=Math.max(0,ademEind-performance.now());
- el("ademTimer").textContent=tijd(ademOver);
+let breathRemaining=120000;
+let breathEnd=0;
+let breathTimer=null;
 
- const fase=Math.floor(
-  (120000-ademOver)/4000
- )%2;
- el("ademTekst").textContent=
- fase===0?"Adem rustig in 🌿":"Adem rustig uit 🍃";
+function updateBreath(){
+ breathRemaining=Math.max(0,breathEnd-performance.now());
+ $("breathTime").textContent=fmt(breathRemaining);
 
- if(ademOver<=0){
-  clearInterval(ademInterval);
-  ademInterval=null;
-  ademLoopt=false;
-  el("ademCirkel").classList.remove("beweegt");
-  el("ademTekst").textContent="Goed gedaan! 💚";
-  el("ademStart").textContent="▶ Opnieuw starten";
+ const phase=Math.floor((120000-breathRemaining)/4000)%2;
+ $("breathText").textContent=phase
+  ?"Adem rustig uit 🍃"
+  :"Adem rustig in 🌿";
+
+ if(breathRemaining<=0){
+  clearInterval(breathTimer);
+  breathTimer=null;
+  $("circle").classList.remove("running");
+  $("breathText").textContent="Goed gedaan! 💚";
+  $("breathButton").textContent="▶ Opnieuw";
  }
 }
-function startAdem(){
- if(ademLoopt){
-  ademOver=Math.max(0,ademEind-performance.now());
-  ademVerstreken=120000-ademOver;
-  ademLoopt=false;
-  clearInterval(ademInterval);
-  ademInterval=null;
-  el("ademCirkel").style.animationPlayState="paused";
-  el("ademStart").textContent="▶ Verder";
-  el("ademTekst").textContent="Even pauze 💚";
+
+function resetBreath(){
+ clearInterval(breathTimer);
+ breathTimer=null;
+ breathRemaining=120000;
+ $("breathTime").textContent="02:00";
+ $("breathText").textContent="Klaar om te beginnen?";
+ $("breathButton").textContent="▶ Start";
+ $("circle").classList.remove("running");
+ $("circle").style.animationPlayState="paused";
+}
+
+$("breathButton").addEventListener("click",()=>{
+ if(breathTimer){
+  breathRemaining=Math.max(0,breathEnd-performance.now());
+  clearInterval(breathTimer);
+  breathTimer=null;
+  $("circle").style.animationPlayState="paused";
+  $("breathButton").textContent="▶ Verder";
   return;
  }
- if(ademOver<=0)resetAdem();
- ademLoopt=true;
- ademEind=performance.now()+ademOver;
- el("ademCirkel").classList.add("beweegt");
- el("ademCirkel").style.animationDelay=
- (-ademVerstreken/1000)+"s";
- el("ademCirkel").style.animationPlayState="running";
- el("ademStart").textContent="⏸ Pauze";
- ademInterval=setInterval(updateAdem,100);
- updateAdem();
-}
-function resetAdem(){
- ademLoopt=false;
- clearInterval(ademInterval);
- ademInterval=null;
- ademOver=120000;
- ademVerstreken=0;
- el("ademCirkel").classList.remove("beweegt");
- el("ademCirkel").style.animationPlayState="paused";
- el("ademCirkel").style.animationDelay="0s";
- el("ademTekst").textContent="Klaar om te beginnen?";
- el("ademStart").textContent="▶ Start";
- el("ademTimer").textContent="02:00";
-}
+
+ if(breathRemaining<=0)resetBreath();
+
+ breathEnd=performance.now()+breathRemaining;
+ $("circle").classList.add("running");
+ $("circle").style.animationDelay=
+  (-(120000-breathRemaining)/1000)+"s";
+ $("circle").style.animationPlayState="running";
+ $("breathButton").textContent="⏸ Pauze";
+
+ breathTimer=setInterval(updateBreath,150);
+ updateBreath();
+});
+
+$("breathReset").addEventListener("click",resetBreath);
 
 /* ONTSPANNING */
-let ontspanLoopt=false;
-let ontspanOver=300000;
-let ontspanEind=0;
-let ontspanInterval=null;
-let laatsteStap=-1;
 
-const oefening=[
+const instructions=[
  "Ga rustig zitten of liggen. Voel hoe je lichaam wordt gedragen.",
- "Laat je schouders langzaam zakken. Je hoeft niets vast te houden.",
+ "Laat je schouders zakken. Je hoeft niets vast te houden.",
  "Ontspan je voorhoofd, je ogen en je kaken.",
- "Adem rustig in en laat de lucht vanzelf weer naar buiten gaan.",
- "Voel hoe je handen ontspannen. Laat je vingers zacht rusten.",
+ "Adem rustig in en laat de lucht vanzelf weer gaan.",
+ "Laat je handen en vingers zacht rusten.",
  "Breng je aandacht naar je armen. Ze mogen zwaar worden.",
  "Ontspan je buik. Je hoeft je ademhaling niet te sturen.",
- "Voel hoe je rug contact maakt met de stoel of de ondergrond.",
- "Laat je benen ontspannen, van je bovenbenen tot je knieën.",
- "Ontspan je voeten en je tenen. Voel de rust in je lichaam.",
- "Blijf nog even rustig zitten of liggen. Er hoeft nu niets."
+ "Voel hoe je rug wordt ondersteund.",
+ "Laat je benen langzaam ontspannen.",
+ "Ontspan je voeten en tenen.",
+ "Blijf nog even rustig zitten of liggen."
 ];
 
-function kiesStem(){
- if(!("speechSynthesis" in window))return null;
- const nl=speechSynthesis.getVoices().filter(
-  v=>v.lang.toLowerCase().startsWith("nl")
- );
- return nl.find(v=>
-  /female|vrouw|femke|claire|lotte/i.test(v.name)
- )||nl[0]||null;
-}
-function spreek(t){
- if(!el("stemAan").checked)return;
- if(!("speechSynthesis" in window))return;
- speechSynthesis.cancel();
- const zin=new SpeechSynthesisUtterance(t);
- zin.lang="nl-NL";
- zin.rate=.85;
- zin.pitch=1;
- zin.volume=.9;
- const stem=kiesStem();
- if(stem)zin.voice=stem;
- speechSynthesis.speak(zin);
-}
-function stopStem(){
+let relaxRemaining=300000;
+let relaxEnd=0;
+let relaxTimer=null;
+let relaxStep=-1;
+
+function stopVoice(){
  if("speechSynthesis" in window){
   speechSynthesis.cancel();
  }
 }
-function speelBos(){
- if(!el("bosAan").checked||!ontspanLoopt)return;
- const a=el("bosAudio");
- a.volume=Number(el("volume").value)/100;
- a.play().then(()=>{
-  el("bosStatus").textContent="";
+
+function speak(text){
+ if(!$("voiceOn").checked)return;
+ if(!("speechSynthesis" in window))return;
+
+ stopVoice();
+
+ const utterance=new SpeechSynthesisUtterance(text);
+ utterance.lang="nl-NL";
+ utterance.rate=.85;
+
+ const voices=speechSynthesis.getVoices().filter(
+  voice=>voice.lang.toLowerCase().startsWith("nl")
+ );
+
+ const preferred=voices.find(
+  voice=>/vrouw|female|femke|claire|lotte/i.test(voice.name)
+ );
+
+ if(preferred||voices[0]){
+  utterance.voice=preferred||voices[0];
+ }
+
+ speechSynthesis.speak(utterance);
+}
+
+function stopForest(){
+ $("forestAudio").pause();
+}
+
+function playForest(){
+ if(!$("forestOn").checked||!relaxTimer)return;
+
+ const audio=$("forestAudio");
+ audio.volume=Number($("forestVolume").value)/100;
+
+ audio.play().then(()=>{
+  $("forestMessage").textContent="";
  }).catch(()=>{
-  el("bosStatus").textContent=
-  "Bosgeluiden zijn nog niet beschikbaar.";
+  $("forestMessage").textContent=
+   "Bosgeluiden zijn nog niet beschikbaar.";
  });
 }
-function stopBos(){el("bosAudio").pause()}
 
-el("bosAan").addEventListener("change",()=>{
- if(el("bosAan").checked) speelBos();
- else{
-  stopBos();
-  el("bosStatus").textContent="";
- }
-});
-el("volume").addEventListener("input",()=>{
- el("bosAudio").volume=
- Number(el("volume").value)/100;
-});
-el("stemAan").addEventListener("change",()=>{
- if(!el("stemAan").checked)stopStem();
- else if(ontspanLoopt){
-  spreek(el("ontspanTekst").textContent);
- }
-});
+function updateRelax(){
+ relaxRemaining=Math.max(0,relaxEnd-performance.now());
+ $("relaxTime").textContent=fmt(relaxRemaining);
 
-function updateOntspan(){
- if(!ontspanLoopt)return;
- ontspanOver=Math.max(
-  0,ontspanEind-performance.now()
- );
- el("ontspanTimer").textContent=tijd(ontspanOver);
- if(ontspanOver<=0){
-  clearInterval(ontspanInterval);
-  ontspanInterval=null;
-  ontspanLoopt=false;
-  stopBos();
-  stopStem();
-  el("ontspanTekst").textContent=
-  "De oefening is afgelopen. Neem rustig de tijd om terug te komen. 💚";
-  el("ontspanStart").textContent="▶ Opnieuw";
-  spreek("De oefening is afgelopen. Neem rustig de tijd om terug te komen.");
+ if(relaxRemaining<=0){
+  clearInterval(relaxTimer);
+  relaxTimer=null;
+  stopForest();
+  stopVoice();
+  $("relaxText").textContent=
+   "De oefening is afgelopen. Neem rustig de tijd. 💚";
+  $("relaxButton").textContent="▶ Opnieuw";
   return;
  }
- const stap=Math.min(
-  oefening.length-1,
-  Math.floor((300000-ontspanOver)/30000)
+
+ const step=Math.min(
+  instructions.length-1,
+  Math.floor((300000-relaxRemaining)/30000)
  );
- if(stap!==laatsteStap){
-  laatsteStap=stap;
-  el("ontspanTekst").textContent=oefening[stap];
-  spreek(oefening[stap]);
+
+ if(step!==relaxStep){
+  relaxStep=step;
+  $("relaxText").textContent=instructions[step];
+  speak(instructions[step]);
  }
-}
-function startOntspan(){
- if(ontspanLoopt){
-  ontspanOver=Math.max(
-   0,ontspanEind-performance.now()
-  );
-  ontspanLoopt=false;
-  clearInterval(ontspanInterval);
-  ontspanInterval=null;
-  stopBos();
-  stopStem();
-  el("ontspanStart").textContent="▶ Verder";
-  return;
- }
- if(ontspanOver<=0){
-  ontspanOver=300000;
-  laatsteStap=-1;
- }
- ontspanLoopt=true;
- ontspanEind=performance.now()+ontspanOver;
- el("ontspanStart").textContent="⏸ Pauze";
- if(el("bosAan").checked)speelBos();
- const vorige=laatsteStap;
- ontspanInterval=setInterval(updateOntspan,200);
- updateOntspan();
- if(el("stemAan").checked&&vorige>=0){
-  spreek(el("ontspanTekst").textContent);
- }
-}
-function stopOntspan(){
- ontspanLoopt=false;
- clearInterval(ontspanInterval);
- ontspanInterval=null;
- ontspanOver=300000;
- laatsteStap=-1;
- stopBos();
- el("bosAudio").currentTime=0;
- stopStem();
- el("ontspanTekst").textContent=
- "Klaar voor een moment van rust?";
- el("ontspanStart").textContent="▶ Start";
- el("ontspanTimer").textContent="05:00";
 }
 
-/* INSTELLINGEN PUZZELS */
-const puzzels={
+function resetRelax(){
+ clearInterval(relaxTimer);
+ relaxTimer=null;
+ relaxRemaining=300000;
+ relaxStep=-1;
+ stopVoice();
+ stopForest();
+
+ try{
+  $("forestAudio").currentTime=0;
+ }catch(error){}
+
+ $("relaxText").textContent=
+  "Klaar voor een moment van rust?";
+ $("relaxTime").textContent="05:00";
+ $("relaxButton").textContent="▶ Start";
+}
+
+$("relaxButton").addEventListener("click",()=>{
+ if(relaxTimer){
+  relaxRemaining=Math.max(0,relaxEnd-performance.now());
+  clearInterval(relaxTimer);
+  relaxTimer=null;
+  stopVoice();
+  stopForest();
+  $("relaxButton").textContent="▶ Verder";
+  return;
+ }
+
+ if(relaxRemaining<=0)resetRelax();
+
+ relaxEnd=performance.now()+relaxRemaining;
+ $("relaxButton").textContent="⏸ Pauze";
+ const previousStep=relaxStep;
+
+ relaxTimer=setInterval(updateRelax,200);
+ updateRelax();
+
+ if(previousStep>=0){
+  speak($("relaxText").textContent);
+ }
+
+ playForest();
+});
+
+$("relaxReset").addEventListener("click",resetRelax);
+
+$("forestOn").addEventListener("change",()=>{
+ if($("forestOn").checked)playForest();
+ else stopForest();
+});
+
+$("forestVolume").addEventListener("input",()=>{
+ $("forestAudio").volume=
+  Number($("forestVolume").value)/100;
+});
+
+$("voiceOn").addEventListener("change",()=>{
+ if($("voiceOn").checked&&relaxTimer){
+  speak($("relaxText").textContent);
+ }else{
+  stopVoice();
+ }
+});
+
+/* MOEILIJKHEID */
+
+let level=read("rust_niveau","gemiddeld");
+
+if(!["makkelijk","gemiddeld","moeilijk"].includes(level)){
+ level="gemiddeld";
+}
+
+$("level").value=level;
+
+/* HERSENKRAKERS */
+
+const questions={
  makkelijk:[
   ["Wat komt na 2, 4, 6, 8?",
-   ["9","10","12","14"],1,
-   "Er komt steeds 2 bij."],
+   ["9","10","12"],1,"Steeds twee erbij."],
   ["Welk dier kan vliegen?",
-   ["Egel","Merel","Konijn","Vos"],1,
-   "Een merel is een vogel."],
+   ["Egel","Merel","Vos"],1,"De merel is een vogel."],
   ["Wat is de helft van 18?",
-   ["6","8","9","12"],2,
-   "18 gedeeld door 2 is 9."],
-  ["Welk woord hoort er niet bij?",
-   ["Appel","Peer","Wortel","Banaan"],2,
-   "Een wortel is een groente."]
+   ["6","8","9"],2,"18 gedeeld door twee is 9."]
  ],
  gemiddeld:[
-  ["Welk getal volgt? 2, 6, 12, 20, ...",
-   ["26","28","30","32"],2,
-   "De verschillen zijn 4, 6, 8 en 10."],
-  ["Wat komt hierna? A, C, E, G, ...",
-   ["H","I","J","K"],1,
-   "Je slaat steeds een letter over."],
-  ["Een trein vertrekt om 14:20 en rijdt 45 minuten. Aankomst?",
-   ["14:55","15:00","15:05","15:15"],2,
-   "14:20
+  ["Wat volgt op 2, 6, 12, 20?",
+   ["26","28","30"],2,"De verschillen zijn 4, 6, 8 en 10."],
+  ["Wat komt na A, C, E, G?",
+   ["H","I","J"],1,"Steeds één letter overslaan."],
+  ["Een trein vertrekt om 14:20 en rijdt 45 minuten.",
+   ["14:55","15:00","15:05"],2,"14:20 + 45 minuten = 15:05."]
+ ],
+ moeilijk:[
+  ["Wat volgt op 3, 9, 27, 81?",
+   ["162","243","324"],1,"Telkens maal drie."],
+  ["Vier mensen schudden elkaar één keer de hand. Hoeveel handdrukken?",
+   ["4","6","8"],1,"Er zijn zes verschillende paren."],
+  ["Wat volgt op 1, 1, 2, 3, 5, 8?",
+   ["11","12","13"],2,"Som van de vorige twee."]
+ ]
+};
+
+let questionIndex=-1;
+let questionAnswered=false;
+
+function nextQuestion(){
+ let index=rand(questions[level].length);
+
+ if(index===questionIndex){
+  index=(index+1)%questions[level].length;
+ }
+
+ questionIndex=index;
+ questionAnswered=false;
+ drawQuestion();
+}
+
+function drawQuestion(){
+ const question=questions[level][questionIndex];
+
+ $("question").textContent=question[0];
+ $("answers").replaceChildren();
+
+ question[1].forEach((answer,index)=>{
+  const button=document.createElement("button");
+  button.className="answer";
+  button.textContent=answer;
+  button.disabled=questionAnswered;
+  button.addEventListener("click",()=>{
+   answerQuestion(index);
+  });
+  $("answers").appendChild(button);
+ });
+
+ $("showAnswer").disabled=questionAnswered;
+
+ if(!questionAnswered){
+  $("questionStatus").textContent="";
+ }
+}
+
+function answerQuestion(index){
+ if(questionAnswered)return;
+
+ questionAnswered=true;
+ const question=questions[level][questionIndex];
+
+ $("questionStatus").textContent=
+  (index===question[2]
+   ?"Goed gedaan! 💚 "
+   :"Het juiste antwoord is "+question[1][question[2]]+". ")
+  +question[3];
+
+ drawQuestion();
+}
+
+$("nextQuestion").addEventListener("click",nextQuestion);
+$("showAnswer").addEventListener("click",()=>{
+ answerQuestion(-1);
+});
+
+/* SPELKEUZE */
+
+function game(name){
+ stopSequence();
+ currentGame=name;
+
+ document.querySelectorAll(".game").forEach(section=>{
+  section.classList.toggle(
+   "active",section.id==="game-"+name
+  );
+ });
+
+ document.querySelectorAll("[data-game]").forEach(button=>{
+  button.classList.toggle(
+   "selected",button.dataset.game===name
+  );
+ });
+
+ if(name==="memory")newMemory();
+ if(name==="woorden")newWords();
+ if(name==="schuiven")newSlide();
+ if(name==="reeks")newSequence();
+}
+
+document.querySelectorAll("[data-game]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  game(button.dataset.game);
+ });
+});
+
+$("level").addEventListener("change",()=>{
+ level=$("level").value;
+ save("rust_niveau",level);
+ questionIndex=-1;
+ nextQuestion();
+ game(currentGame);
+});
+
+/* MEMORY */
+
+const icons=[
+ "🌿
