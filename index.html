@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="nl">
 <head>
@@ -706,4 +705,624 @@ $("level").addEventListener("change",()=>{
 /* MEMORY */
 
 const icons=[
- "🌿
+ "🌿","🐦","🌸","🍀","🦋",
+ "🌳","🌻","🍄","🐝","🌙"
+];
+
+let memory=[];
+let opened=[];
+let matched=0;
+let memoryLocked=false;
+let memoryDelay=null;
+
+function newMemory(){
+ clearTimeout(memoryDelay);
+ memoryLocked=false;
+ opened=[];
+ matched=0;
+
+ const count={
+  makkelijk:3,
+  gemiddeld:6,
+  moeilijk:8
+ }[level];
+
+ const chosen=shuffle(icons).slice(0,count);
+
+ memory=shuffle([...chosen,...chosen]).map(icon=>({
+  icon:icon,
+  done:false
+ }));
+
+ $("memoryGrid").style.gridTemplateColumns=
+  "repeat("+(count===3?3:4)+",1fr)";
+
+ drawMemory();
+}
+
+function drawMemory(){
+ $("memoryGrid").replaceChildren();
+
+ memory.forEach((card,index)=>{
+  const visible=card.done||opened.includes(index);
+  const button=document.createElement("button");
+
+  button.textContent=visible?card.icon:"?";
+  button.className=card.done
+   ?"matched"
+   :visible?"revealed":"";
+
+  button.disabled=card.done||memoryLocked;
+
+  button.addEventListener("click",()=>{
+   flip(index);
+  });
+
+  $("memoryGrid").appendChild(button);
+ });
+
+ $("memoryStatus").textContent=
+  matched===memory.length/2
+  ?"Alle paren gevonden! 💚"
+  :matched+" van "+memory.length/2+" paren gevonden";
+}
+
+function flip(index){
+ if(memoryLocked)return;
+ if(memory[index].done)return;
+ if(opened.includes(index))return;
+
+ opened.push(index);
+ drawMemory();
+
+ if(opened.length===2){
+  const [first,second]=opened;
+
+  if(memory[first].icon===memory[second].icon){
+   memory[first].done=true;
+   memory[second].done=true;
+   matched++;
+   opened=[];
+   drawMemory();
+  }else{
+   memoryLocked=true;
+
+   memoryDelay=setTimeout(()=>{
+    opened=[];
+    memoryLocked=false;
+    drawMemory();
+   },900);
+  }
+ }
+}
+
+$("newMemory").addEventListener("click",newMemory);
+
+/* WOORDZOEKER */
+
+const wordSets={
+ makkelijk:[
+  ["BOS","UIL","REE"],
+  ["ZON","VIS","TAK"]
+ ],
+ gemiddeld:[
+  ["EGEL","MEREL","BLOEM","WATER"],
+  ["NATUUR","VOGEL","BOMEN","MOS"]
+ ],
+ moeilijk:[
+  ["VLINDER","ZEEAREND","BLOESEM","BOSUIL"],
+  ["ZWALUW","KONIJN","EIKEL","PADDESTOEL"]
+ ]
+};
+
+let wordSize=8;
+let wordBoard=[];
+let wordLocations=[];
+let wordFound=new Set();
+let wordStart=null;
+let wordList=[];
+
+function newWords(){
+ const sets=wordSets[level];
+ wordList=[...sets[rand(sets.length)]];
+
+ wordSize={
+  makkelijk:7,
+  gemiddeld:9,
+  moeilijk:12
+ }[level];
+
+ let success=false;
+
+ for(let attempt=0;attempt<80&&!success;attempt++){
+  wordBoard=Array.from(
+   {length:wordSize},
+   ()=>Array(wordSize).fill("")
+  );
+
+  wordLocations=[];
+  success=wordList.every(placeWord);
+ }
+
+ if(!success){
+  $("wordStatus").textContent=
+   "Probeer een nieuwe woordzoeker.";
+  return;
+ }
+
+ const alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+ for(let y=0;y<wordSize;y++){
+  for(let x=0;x<wordSize;x++){
+   if(!wordBoard[y][x]){
+    wordBoard[y][x]=alphabet[rand(26)];
+   }
+  }
+ }
+
+ wordFound=new Set();
+ wordStart=null;
+ drawWords();
+}
+
+function placeWord(word){
+ const directions=[
+  [0,1],[1,0],[1,1],
+  [0,-1],[-1,0],[-1,-1],
+  [1,-1],[-1,1]
+ ];
+
+ for(let attempt=0;attempt<300;attempt++){
+  const [dy,dx]=directions[rand(directions.length)];
+  const y=rand(wordSize);
+  const x=rand(wordSize);
+  const cells=[];
+  let valid=true;
+
+  for(let i=0;i<word.length;i++){
+   const yy=y+i*dy;
+   const xx=x+i*dx;
+
+   if(
+    yy<0||xx<0||
+    yy>=wordSize||xx>=wordSize||
+    (wordBoard[yy][xx]&&wordBoard[yy][xx]!==word[i])
+   ){
+    valid=false;
+    break;
+   }
+
+   cells.push([yy,xx]);
+  }
+
+  if(!valid)continue;
+
+  cells.forEach(([yy,xx],index)=>{
+   wordBoard[yy][xx]=word[index];
+  });
+
+  wordLocations.push({word,cells});
+  return true;
+ }
+
+ return false;
+}
+
+function drawWords(){
+ $("wordList").replaceChildren();
+
+ wordList.forEach(word=>{
+  const span=document.createElement("span");
+  span.textContent=word;
+  span.className=wordFound.has(word)?"done":"";
+  $("wordList").appendChild(span);
+ });
+
+ $("wordGrid").replaceChildren();
+ $("wordGrid").style.gridTemplateColumns=
+  "repeat("+wordSize+",1fr)";
+
+ const foundCells=new Set();
+
+ wordLocations.filter(
+  location=>wordFound.has(location.word)
+ ).forEach(location=>{
+  location.cells.forEach(([y,x])=>{
+   foundCells.add(y+","+x);
+  });
+ });
+
+ for(let y=0;y<wordSize;y++){
+  for(let x=0;x<wordSize;x++){
+   const button=document.createElement("button");
+   button.textContent=wordBoard[y][x];
+
+   if(foundCells.has(y+","+x)){
+    button.className="found";
+   }else if(
+    wordStart&&
+    wordStart[0]===y&&
+    wordStart[1]===x
+   ){
+    button.className="chosen";
+   }
+
+   button.setAttribute(
+    "aria-label",
+    "Letter "+wordBoard[y][x]+
+    " rij "+(y+1)+" kolom "+(x+1)
+   );
+
+   button.addEventListener("click",()=>{
+    pickWord(y,x);
+   });
+
+   $("wordGrid").appendChild(button);
+  }
+ }
+
+ $("wordStatus").textContent=
+  wordFound.size===wordList.length
+  ?"Alle woorden gevonden! 💚"
+  :wordFound.size+" van "+wordList.length+" gevonden";
+}
+
+function pickWord(y,x){
+ if(!wordStart){
+  wordStart=[y,x];
+  drawWords();
+  return;
+ }
+
+ const [startY,startX]=wordStart;
+ wordStart=null;
+ let match=null;
+
+ for(const location of wordLocations){
+  if(wordFound.has(location.word))continue;
+
+  const first=location.cells[0];
+  const last=location.cells[location.cells.length-1];
+
+  const forward=
+   first[0]===startY&&first[1]===startX&&
+   last[0]===y&&last[1]===x;
+
+  const backward=
+   last[0]===startY&&last[1]===startX&&
+   first[0]===y&&first[1]===x;
+
+  if(forward||backward){
+   match=location;
+   break;
+  }
+ }
+
+ if(match){
+  wordFound.add(match.word);
+ }
+
+ drawWords();
+
+ if(!match){
+  $("wordStatus").textContent=
+   "Niet gevonden. Probeer een ander woord.";
+ }
+}
+
+$("newWords").addEventListener("click",newWords);
+
+/* SCHUIFPUZZEL */
+
+let slideSize=3;
+let tiles=[];
+let moves=0;
+
+function slideNeighbors(index){
+ const y=Math.floor(index/slideSize);
+ const x=index%slideSize;
+
+ return [
+  [y-1,x],
+  [y+1,x],
+  [y,x-1],
+  [y,x+1]
+ ].filter(([row,col])=>
+  row>=0&&col>=0&&
+  row<slideSize&&col<slideSize
+ ).map(([row,col])=>
+  row*slideSize+col
+ );
+}
+
+function slideSolved(){
+ return tiles.every((value,index)=>
+  index===tiles.length-1
+  ?value===0
+  :value===index+1
+ );
+}
+
+function newSlide(){
+ slideSize=level==="moeilijk"?4:3;
+
+ tiles=Array.from(
+  {length:slideSize*slideSize},
+  (_,index)=>
+   index===slideSize*slideSize-1?0:index+1
+ );
+
+ moves=0;
+ let previous=-1;
+
+ const steps={
+  makkelijk:12,
+  gemiddeld:45,
+  moeilijk:110
+ }[level];
+
+ for(let k=0;k<steps;k++){
+  const empty=tiles.indexOf(0);
+  let neighbors=slideNeighbors(empty).filter(
+   index=>index!==previous
+  );
+
+  if(!neighbors.length){
+   neighbors=slideNeighbors(empty);
+  }
+
+  const next=neighbors[rand(neighbors.length)];
+
+  [tiles[empty],tiles[next]]=
+   [tiles[next],tiles[empty]];
+
+  previous=empty;
+ }
+
+ if(slideSolved()){
+  const empty=tiles.indexOf(0);
+  const next=slideNeighbors(empty)[0];
+
+  [tiles[empty],tiles[next]]=
+   [tiles[next],tiles[empty]];
+ }
+
+ drawSlide();
+}
+
+function drawSlide(){
+ $("slideGrid").replaceChildren();
+
+ $("slideGrid").style.gridTemplateColumns=
+  "repeat("+slideSize+",1fr)";
+
+ const neighbors=slideNeighbors(tiles.indexOf(0));
+
+ tiles.forEach((value,index)=>{
+  const button=document.createElement("button");
+
+  button.textContent=value||"";
+  button.className=value?"":"empty";
+  button.disabled=!value||!neighbors.includes(index);
+
+  button.addEventListener("click",()=>{
+   moveSlide(index);
+  });
+
+  $("slideGrid").appendChild(button);
+ });
+
+ $("slideStatus").textContent=slideSolved()
+  ?"Puzzel opgelost! 💚"
+  :moves+" zetten";
+}
+
+function moveSlide(index){
+ const empty=tiles.indexOf(0);
+
+ if(!slideNeighbors(empty).includes(index))return;
+
+ [tiles[empty],tiles[index]]=
+  [tiles[index],tiles[empty]];
+
+ moves++;
+ drawSlide();
+}
+
+$("newSlide").addEventListener("click",newSlide);
+
+/* GEHEUGENSPEL */
+
+let sequence=[];
+let sequencePosition=0;
+let sequenceBusy=false;
+let sequenceTimers=[];
+let sequenceToken=0;
+
+const pads=[
+ ...document.querySelectorAll("[data-color]")
+];
+
+function stopSequence(){
+ sequenceToken++;
+
+ sequenceTimers.forEach(timer=>{
+  clearTimeout(timer);
+ });
+
+ sequenceTimers=[];
+ sequenceBusy=false;
+
+ pads.forEach(pad=>{
+  pad.classList.remove("lit");
+ });
+}
+
+function later(callback,delay,token){
+ const timer=setTimeout(()=>{
+  if(token===sequenceToken){
+   callback();
+  }
+ },delay);
+
+ sequenceTimers.push(timer);
+}
+
+function showSequence(){
+ stopSequence();
+ sequenceBusy=true;
+ sequencePosition=0;
+
+ const token=sequenceToken;
+
+ $("sequenceStatus").textContent=
+  "Kijk goed naar de kleuren...";
+
+ sequence.forEach((color,index)=>{
+  later(()=>{
+   pads[color].classList.add("lit");
+  },500+index*850,token);
+
+  later(()=>{
+   pads[color].classList.remove("lit");
+  },1000+index*850,token);
+ });
+
+ later(()=>{
+  sequenceBusy=false;
+  $("sequenceStatus").textContent=
+   "Jouw beurt! Tik de kleuren na.";
+ },550+sequence.length*850,token);
+}
+
+function newSequence(){
+ const count={
+  makkelijk:3,
+  gemiddeld:5,
+  moeilijk:7
+ }[level];
+
+ sequence=Array.from(
+  {length:count},
+  ()=>rand(4)
+ );
+
+ showSequence();
+}
+
+function pickColor(index){
+ if(sequenceBusy||!sequence.length)return;
+
+ if(index!==sequence[sequencePosition]){
+  $("sequenceStatus").textContent=
+   "Bijna! Tik op Reeks opnieuw bekijken. 💚";
+  sequenceBusy=true;
+  return;
+ }
+
+ sequencePosition++;
+
+ if(sequencePosition===sequence.length){
+  $("sequenceStatus").textContent=
+   "Hele reeks onthouden! 💚";
+  sequenceBusy=true;
+ }else{
+  $("sequenceStatus").textContent=
+   sequencePosition+" van "+sequence.length+" goed";
+ }
+}
+
+pads.forEach(button=>{
+ button.addEventListener("click",()=>{
+  pickColor(Number(button.dataset.color));
+ });
+});
+
+$("newSequence").addEventListener("click",newSequence);
+
+$("repeatSequence").addEventListener("click",()=>{
+ if(sequence.length)showSequence();
+});
+
+/* HERINNERINGEN */
+
+let reminders=read("rust_herinnering","false")==="true";
+let activeMs=0;
+let lastTick=performance.now();
+
+$("remindOn").checked=reminders;
+
+$("remindOn").addEventListener("change",()=>{
+ reminders=$("remindOn").checked;
+ save("rust_herinnering",String(reminders));
+ activeMs=0;
+ lastTick=performance.now();
+ $("reminder").hidden=true;
+});
+
+$("reminderClose").addEventListener("click",()=>{
+ $("reminder").hidden=true;
+});
+
+$("reminderPlay").addEventListener("click",()=>{
+ page("puzzels");
+ game("memory");
+});
+
+setInterval(()=>{
+ const now=performance.now();
+ const delta=Math.min(
+  1000,
+  Math.max(0,now-lastTick)
+ );
+
+ lastTick=now;
+
+ if(!reminders||document.hidden||!document.hasFocus()){
+  return;
+ }
+
+ activeMs+=delta;
+
+ if(activeMs>=1800000){
+  activeMs=0;
+  $("reminder").hidden=false;
+ }
+},1000);
+
+/* APP PAUZEREN */
+
+document.addEventListener("visibilitychange",()=>{
+ lastTick=performance.now();
+
+ if(document.hidden){
+  $("reminder").hidden=true;
+
+  if(breathTimer){
+   $("breathButton").click();
+  }
+
+  if(relaxTimer){
+   $("relaxButton").click();
+  }
+
+  stopSequence();
+ }
+});
+
+window.addEventListener("focus",()=>{
+ lastTick=performance.now();
+});
+
+window.addEventListener("blur",()=>{
+ lastTick=performance.now();
+});
+
+/* APP STARTEN */
+
+nextQuestion();
+game("vragen");
+
+</script>
+</body>
+</html>
